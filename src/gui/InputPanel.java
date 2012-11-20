@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.Dimension;
-
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -29,9 +27,9 @@ public class InputPanel extends JPanel {
 	}
 	
 	protected void init(){
+//		this.setBackground(Color.RED);
+		
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		this.setMaximumSize(new Dimension(InputPanel.WIDTH, 
-											InputPanel.HEIGHT));
 		
 		this.setIpInput(new JInput("Digite o IP inicial"));
 		this.setMusicInput(new JInput("Digite o nome da música:"));

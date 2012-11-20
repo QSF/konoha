@@ -8,14 +8,16 @@ public class JPeer {
 	
 	private String ip;
 	private String percentage;
+	private String downloaded;
 	
 	public JPeer(){
 		
 	}
 	
-	public JPeer(String ip, String percentage){
+	public JPeer(String ip, String percentage, String downloaded){
 		this.setIp(ip);
 		this.setPercentage(percentage);
+		this.setDownloaded(downloaded);
 	}
 	
 	public String getIp() {
@@ -35,7 +37,16 @@ public class JPeer {
 	
 	@Override
 	public String toString() {
-		return this.getIp() + "       " + this.getPercentage();
+		return this.getIp() + "       " + this.getPercentage()
+				+ "           " + this.getDownloaded();
+	}
+
+	public String getDownloaded() {
+		return downloaded;
+	}
+
+	public void setDownloaded(String downloaded) {
+		this.downloaded = downloaded;
 	}
 
 }

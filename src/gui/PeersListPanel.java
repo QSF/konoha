@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -30,30 +31,27 @@ public class PeersListPanel extends JPanel {
 	}
 	
 	protected void init(){
+//		this.setBackground(Color.GREEN);
+		
 		this.list = new JList<String>();
 		
+		this.list.setAlignmentX(Component.LEFT_ALIGNMENT);
+		this.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
 		this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.list.setLayoutOrientation(JList.VERTICAL);		
-		//this.setBackground(Color.WHITE);
-		
-		this.setMaximumSize(new Dimension(PeersListPanel.WIDTH,PeersListPanel.HEIGHT));
-		this.setMinimumSize(new Dimension(PeersListPanel.WIDTH,PeersListPanel.HEIGHT));
-		
-		this.add(list);
+		this.list.setLayoutOrientation(JList.VERTICAL);
 		
 		JScrollPane scroll = new JScrollPane(this.list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
-//		Border emptyBorder = BorderFactory.createEmptyBorder();
-//		scroll.setBorder(emptyBorder);
-		
-		this.add(scroll);
+		this.add(scroll, Component.LEFT_ALIGNMENT);
 		
 		this.initHeader();
 	}
 	
 	protected void initHeader(){
-		this.addPeer(new JPeer("         IP        ", "total(%)"));
+		this.peers.add("IP                        total(%)      baixado(Mbytes)");
+		this.list.setListData(this.peers);
 	}
 	
 	/**

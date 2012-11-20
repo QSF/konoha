@@ -6,7 +6,9 @@ public class TestKohanaWindow {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new KonohaWindow();
+		KonohaWindow window = new KonohaWindow();
+		
+		System.out.println(window.getSize());
 
 	}
 

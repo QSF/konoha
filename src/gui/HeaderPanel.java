@@ -31,6 +31,8 @@ public class HeaderPanel extends JPanel {
 	}
 	/*Função que inicializa o layout*/
 	protected void init(String slogan){
+//		this.setBackground(Color.BLUE);
+		
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		this.setMaximumSize(new Dimension(HeaderPanel.WIDTH, 
 											HeaderPanel.HEIGHT));

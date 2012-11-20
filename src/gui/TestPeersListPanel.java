@@ -11,20 +11,21 @@ public class TestPeersListPanel {
 		PeersListPanel panel = peersPanel.getPeersListPanel();
 		
 		//adiciona os peers.
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
 		
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
 		
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
-		panel.addPeer(new JPeer("192.168.0.1", "50,04"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
+		panel.addPeer(new JPeer("192.168.0.1", "50,04", "400"));
+		
 		
 		
 		frame.add(peersPanel);
