@@ -1,52 +1,54 @@
 package gui;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.JList;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.border.Border;
 
-/**
- * Classe que contém a lista de peers.
- * Deve oferecer métodos para adicionar e remover elementos da lista.
- * */
 public class PeersPanel extends JPanel {
 
 	private static final long serialVersionUID = -5324997827881521594L;
 	
-	private ArrayList<JPeer> jPeers = new ArrayList<>();
+	public final static int WIDTH = 700;
+	public final static int HEIGHT = 200;
 	
-	private JList<String> list;
+	/*Label que contém a msg do que é listado.*/
+	private JLabel peersLabel;
+	/*Contém a lista de peers*/
+	private PeersListPanel peersListPanel;
 	
 	public PeersPanel(){
 		this.init();
 	}
 	
 	protected void init(){
-		this.list = new JList<String>();
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		this.setMaximumSize(new Dimension(PeersPanel.WIDTH, 
+							PeersPanel.HEIGHT));
 		
-		this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.list.setLayoutOrientation(JList.VERTICAL);
-		this.list.setMaximumSize(new Dimension(WIDTH,HEIGHT));
-		this.list.setMinimumSize(new Dimension(WIDTH,HEIGHT));
+		//adicionar a descrição da música.
+		this.setPeersLabel(new JLabel("Lista de peers"));
+		this.setPeersListPanel(new PeersListPanel());
 		
-		//this.setBackground(Color.WHITE);
-		
-		this.setMaximumSize(new Dimension(WIDTH,HEIGHT));
-		this.setMinimumSize(new Dimension(WIDTH,HEIGHT));
-		
-		this.add(list);
-		
-		JScrollPane scroll = new JScrollPane(this.list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		Border emptyBorder = BorderFactory.createEmptyBorder();
-		scroll.setBorder(emptyBorder);
-		
-		this.add(scroll);
+		this.add(this.getPeersLabel());
+		this.add(this.getPeersListPanel());
 	}
+
+	public JLabel getPeersLabel() {
+		return peersLabel;
+	}
+
+	public void setPeersLabel(JLabel peersLabel) {
+		this.peersLabel = peersLabel;
+	}
+
+	public PeersListPanel getPeersListPanel() {
+		return peersListPanel;
+	}
+
+	public void setPeersListPanel(PeersListPanel peersListPanel) {
+		this.peersListPanel = peersListPanel;
+	}
+	
 }
