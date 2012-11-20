@@ -1,0 +1,41 @@
+package gui;
+
+/**
+ * Representa um peer na GUI.
+ * Contém IP e % que baixa deste peer.
+ */
+public class JPeer {
+	
+	private String ip;
+	private String percentage;
+	
+	public JPeer(){
+		
+	}
+	
+	public JPeer(String ip, String percentage){
+		this.setIp(ip);
+		this.setPercentage(percentage);
+	}
+	
+	public String getIp() {
+		return ip;
+	}
+	public void setIp(String ip) {
+		//formatar.
+		this.ip = ip;
+	}
+	public String getPercentage() {
+		//formatar.
+		return percentage;
+	}
+	public void setPercentage(String percentage) {
+		this.percentage = percentage;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getIp() + "       " + this.getPercentage();
+	}
+
+}
