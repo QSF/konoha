@@ -8,7 +8,6 @@ import javax.swing.JPanel;
  * Classe que representa o painel que contém entrada de dados.
  * Aqui irá conter o campo que digita o ip inicial, o campo que digita 
  * o nome da música e o botão de pesquisar(a música).
- * @TODO que tal fazer um esquema de ler as msgs de um proprierties?
  * */
 public class InputPanel extends JPanel {
 
@@ -17,7 +16,9 @@ public class InputPanel extends JPanel {
 	public final static int WIDTH = 700;
 	public final static int HEIGHT = 200;
 	
+	/**Input referente ao ip inicial*/
 	private JInput ipInput;
+	/**Input referente ao nome da música*/
 	private JInput musicInput;
 	
 	private JButton searchButton;
@@ -26,9 +27,8 @@ public class InputPanel extends JPanel {
 		this.init();
 	}
 	
-	protected void init(){
-//		this.setBackground(Color.RED);
-		
+	
+	protected void init(){		
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
 		this.setIpInput(new JInput("Digite o IP inicial"));
@@ -41,6 +41,8 @@ public class InputPanel extends JPanel {
 		this.add(this.getMusicInput());
 		this.add(this.getSearchButton());
 	}
+	
+	/**Getters e setters*/
 
 	public JInput getIpInput() {
 		return ipInput;

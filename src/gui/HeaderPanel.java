@@ -15,23 +15,32 @@ public class HeaderPanel extends JPanel {
 
 	private static final long serialVersionUID = 6983583458654838378L;
 	
+	/**Largura do header*/
 	public final static int WIDTH = 700;
+	/**Altura do header*/
 	public final static int HEIGHT = 100;
 	
+	/**Largura do logotipo*/
 	public final static int LOGO_WIDTH = 100;
+	
+	/**altura do logotipo*/
 	public final static int LOGO_HEIGHT = 100;
 	
-	/*Ícone que possui a imagem do logo*/
+	/**Ícone que possui a imagem do logo*/
 	private JLabel logo;
-	/*Ícone que possui o slogan*/
+	/**Ícone que possui o slogan*/
 	private JLabel slogan;
 	
 	public HeaderPanel(){
 		this.init("Use Kohana, don't be an aho!");
 	}
-	/*Função que inicializa o layout*/
+	
+	/**
+	 * Função que inicializa o layout
+	 * 
+	 * @param slogan - Slogan do Konoha.
+	 * */
 	protected void init(String slogan){
-//		this.setBackground(Color.BLUE);
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		this.setMaximumSize(new Dimension(HeaderPanel.WIDTH, 
@@ -53,6 +62,8 @@ public class HeaderPanel extends JPanel {
 		this.add(this.getLogo());
 		this.add(this.getSlogan());
 	}
+	
+	/**Getters e setters*/
 
 	public JLabel getLogo() {
 		return logo;
@@ -67,5 +78,4 @@ public class HeaderPanel extends JPanel {
 	public void setSlogan(JLabel slogan) {
 		this.slogan = slogan;
 	}
-
 }

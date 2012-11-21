@@ -36,7 +36,7 @@ public class JInput extends JPanel {
 		this.setField(new JTextField());
 		this.add(this.getField());
 	}
-	
+	/**Getters e setters*/
 	public JLabel getInputName() {
 		return inputName;
 	}

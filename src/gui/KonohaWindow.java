@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 
@@ -47,7 +46,10 @@ public class KonohaWindow extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
-
+	
+	
+	/**Getters e setters*/
+	
 	public HeaderPanel getHeaderPanel() {
 		return headerPanel;
 	}

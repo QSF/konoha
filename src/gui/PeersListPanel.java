@@ -29,9 +29,7 @@ public class PeersListPanel extends JPanel {
 		this.init();
 	}
 	
-	protected void init(){
-//		this.setBackground(Color.GREEN);
-		
+	protected void init(){		
 		this.list = new JList<String>();
 		
 		this.list.setAlignmentX(Component.LEFT_ALIGNMENT);

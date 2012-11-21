@@ -7,6 +7,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ *	Painel que lista os peers ativos no download. 
+ */
 public class PeersPanel extends JPanel {
 
 	private static final long serialVersionUID = -5324997827881521594L;
@@ -14,9 +17,9 @@ public class PeersPanel extends JPanel {
 	public final static int WIDTH = 700;
 	public final static int HEIGHT = 400;
 	
-	/*Label que contém a msg do que é listado.*/
+	/**Label que contém a msg do que é listado.*/
 	private JLabel peersLabel;
-	/*Contém a lista de peers*/
+	/**Contém a lista de peers*/
 	private PeersListPanel peersListPanel;
 	
 	public PeersPanel(){
@@ -24,8 +27,6 @@ public class PeersPanel extends JPanel {
 	}
 	
 	protected void init(){
-//		this.setBackground(Color.BLACK);
-		
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setMaximumSize(new Dimension(PeersPanel.WIDTH, 
 							PeersPanel.HEIGHT));
@@ -40,6 +41,8 @@ public class PeersPanel extends JPanel {
 		this.add(this.getPeersLabel());
 		this.add(this.getPeersListPanel());
 	}
+	
+	/**Getters e setters*/
 
 	public JLabel getPeersLabel() {
 		return peersLabel;
