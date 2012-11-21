@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Vector;
 

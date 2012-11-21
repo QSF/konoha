@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 
@@ -25,6 +26,7 @@ public class KonohaWindow extends JFrame {
 	}
 	
 	protected void init(){
+		
 		this.setLayout(new BoxLayout(this.getContentPane(), 
 							BoxLayout.PAGE_AXIS));
 		this.setSize(new Dimension(KonohaWindow.WIDTH, 
