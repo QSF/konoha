@@ -133,4 +133,16 @@ public class RouterReceiver implements Runnable {
 		//fecha o thread.
 		this.runCondition = false;
 	}
+	
+	/**
+	 * Método que responde a uma pergunta de arquivo.
+	 * Este método checa se possui o arquivo, se sim, responde com um answer.
+	 * Depois, caso o TTL esteja ok, envia para seus ips
+	 * */
+	public void SEARCHAction(DataSearch data){		
+		//pede os peers.
+//		this.send(this.data);		
+		//fecha o thread.
+		this.runCondition = false;
+	}
 }

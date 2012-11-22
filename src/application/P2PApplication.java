@@ -54,7 +54,7 @@ public class P2PApplication {
 			System.out.println(p.getIp());
 		
 		router.askNeighbors(peer);
-		router.searchFile(fileName,this.myPeer);
+//		router.searchFile(fileName,this.myPeer);
 	}
 
 	public ArrayList<DataFile> getFiles() {

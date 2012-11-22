@@ -100,6 +100,11 @@ public class RouterSender implements Runnable{
 		//vai receber a lista de peers.
 		ArrayList<DataType> dataList = this.stream.receive();
 		DataNeighbors dataNeighbor = (DataNeighbors) dataList.get(0);
+		
+		//teeeeeeeeste
+		for (Peer p: dataNeighbor.getPeers())
+			System.out.println(p.getIp());
+		
 		//adiciona para minha lista de vizinhos.
 		Registry.getInstance().getRouter().addPeers(
 				dataNeighbor.getPeers());
