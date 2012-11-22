@@ -175,10 +175,9 @@ public class IOData {
 		 * */
 		public byte[] SEARCHToBytes(DataSearch data){
 			/*
-			 * OPERATION CODE(1) + TTL(1) + FILE NAME
+			 * OPERATION CODE(1) + TTL(1) + IP + FILE NAME
 			 * */
-			byte[] bytes = new byte[1 +
-			                        1 +
+			byte[] bytes = new byte[1 + 1 + 4 +
 			                        ( data.getFileName().length())];
 			
 			//header
@@ -189,6 +188,13 @@ public class IOData {
 			ByteArrayOutputStream decoding = new ByteArrayOutputStream();
 			decoding.write(bytes[0]);
 			decoding.write(bytes[1]);
+			try {
+				byte[] addr = data.getPeer().getIp().getAddress();
+				decoding.write(addr);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			try {
 				decoding.write(data.getFileName().getBytes("UTF-8"));
 				return decoding.toByteArray();
@@ -329,14 +335,31 @@ public class IOData {
 		 * */
 		public DataSearch bytesToSEARCH(byte[] bytes){
 			DataSearch data = new DataSearch();
-			
+			//Operation code
 			data.getOperations().add(OperationCode.byteToEnum(bytes[0]));
 			
+			//TTL
 			data.setTTL(bytes[1]);
+
+			//IP
+			int i = 1;
+			Peer peer = new Peer();
+			byte[] addr = new byte[4];
+			addr[0] = bytes[++i];
+			addr[1] = bytes[++i];
+			addr[2] = bytes[++i];
+			addr[3] = bytes[++i];
+			try {
+				peer.setIp((Inet4Address) Inet4Address.getByAddress(addr));
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+			data.setPeer(peer);
 			
+			//FileName
 			String fileName = null;
 			try {
-				fileName = new String(bytes,2,bytes.length-2,"UTF-8");
+				fileName = new String(bytes,6,bytes.length-6,"UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
