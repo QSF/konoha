@@ -1,9 +1,22 @@
 package file.transfer;
 
 public class DataMusicTransfer extends DataType {
-	int offset;
-	int length;
-	byte[] content; 
+	private int offset;
+	private int length;
+	private byte[] content; 
+	private String FileName;
+	
+	public DataMusicTransfer(String FileName, int offset, int length){
+		OperationCode op = OperationCode.MUSICTRANSFER;
+		this.operations.add(op);
+		this.offset = offset;
+		this.length = length;
+		this.FileName = FileName;
+	}
+	
+	public DataMusicTransfer(){
+		
+	}
 	
 	public void setOffset(int offset) {
 		this.offset = offset;
@@ -28,4 +41,14 @@ public class DataMusicTransfer extends DataType {
 	public byte[] getContent() {
 		return this.content;
 	}
+
+	public String getFileName() {
+		return FileName;
+	}
+
+	public void setFileName(String fileName) {
+		FileName = fileName;
+	}
+	
+	
 }

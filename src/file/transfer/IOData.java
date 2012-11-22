@@ -429,12 +429,12 @@ public class IOData {
 		 **/
 		public byte[] MUSICTRANSFERtoBytes(DataMusicTransfer data) {
 			/*
-			 * OPERATION CODE(1) + OFFSET(4) + LENGTH(4) + CONTENT
+			 * OPERATION CODE(1) + OFFSET(4) + LENGTH(4) + CONTENT + FILE NAME
 			 * Onde offset representa qual o byte inicial,
 			 * length a quantidade a ser lida e content o conteudo
 			 * */
 			//Aloca quantidade de bytes necess�rios
-			byte[] bytes = new byte[1 + (4 * 1) + (4 * 1) + data.content.length];
+			byte[] bytes = new byte[1 + (4 * 1) + (4 * 1) + data.getContent().length + data.getFileName().length()];
 			//Converte os int em um array de bytes		
 			byte[] off = ByteBuffer.allocate(4).putInt(data.getOffset()).array();
 			byte[] len = ByteBuffer.allocate(4).putInt(data.getLength()).array();
@@ -443,9 +443,19 @@ public class IOData {
 			//Copia array de bytes para array de bytes - (src, posSrc, dest, posDest, qtd)
 			System.arraycopy(off, 0, bytes, 1, 4);
 			System.arraycopy(len, 0, bytes, 5, 4);
-			System.arraycopy(data.content, 0, bytes, 9, data.content.length);
+			System.arraycopy(data.getContent(), 0, bytes, 9, data.getContent().length);
 			
-			return bytes;	
+			ByteArrayOutputStream decoding = new ByteArrayOutputStream();
+			
+			try {
+				decoding.write(bytes);
+				//FILE NAME
+				decoding.write(data.getFileName().getBytes("UTF-8"));
+				return decoding.toByteArray();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 		
 		/**
@@ -466,10 +476,19 @@ public class IOData {
 			byte[] cont = new byte[lenWrapper.getInt()];
 			System.arraycopy(bytes, 9, cont, 0, (bytes.length - 9));
 			
+			String fileName = null;
+			try {
+				fileName = new String(bytes, (9 + (bytes.length - 9)) ,bytes.length - (9 + (bytes.length - 9)),"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			data.getOperations().add(OperationCode.byteToEnum(bytes[0])); 
 			data.setOffset(offWrapper.getInt());
 			data.setLength(lenWrapper.getInt());
 			data.setContent(cont);
+			data.setFileName(fileName);
 			return data;
 		}
 		

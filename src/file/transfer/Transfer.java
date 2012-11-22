@@ -3,6 +3,7 @@ package file.transfer;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -47,15 +48,25 @@ public class Transfer implements Runnable {
 	}
 	
 	@Override
-	public void run(){
-		//espera 10 segundos.
-		//calcula o valor dos pings.
+	public void run() {
+		//esperar um tempo
 		this.calculatePing();
-		//divide.
-		//cria um receiver para cada peer.
+		this.Decision();
+		
+		int offset = 0;
+		int length = 0;
+		for (Peer peer: peers){
+			length = (int) ((peer.getPercent() * this.file.getSize()) / 100);
+			
+			Thread thread = new Thread(new Receiver(this, 12346, peer, offset, length));
+			thread.start();
+			
+			offset = offset + length;
+		}
 	}
 
-	/** Método que grava efetivamente a música na Pasta 
+
+	/** Método que grava efetivamente a música na Pasta
 	 * @throws IOException 
 	 */
 	public void saveFile() throws IOException {    
