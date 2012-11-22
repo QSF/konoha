@@ -11,9 +11,12 @@ public class DataFile {
 	/**Tamanho do arquivo*/
 	private long size;
 	
-	/**Hash MD5 do conteúdo do arquivo, 
+	/** Conteudo do arquivo **/
+	private byte[] content;
+	
+	/** Hash MD5 do conteúdo do arquivo, 
 	 * utilizado para verificar a integridade do mesmo.
-	 * */
+	 **/
 	private String hash;
 	
 	/**Getters and Setters*/
@@ -34,5 +37,11 @@ public class DataFile {
 	}
 	public void setHash(String hash) {
 		this.hash = hash;
+	}
+	public byte[] getContent() {
+		return content;
+	}
+	public void setContent(byte[] content) {
+		this.content = content;
 	}
 }

@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import router.DataNeighbors;
@@ -137,15 +138,13 @@ public class IOData {
 		 * M√©todo espec√≠fico que transforma um DataNeighbors
 		 * em um array de bytes.
 		 * */
-		public byte[] NEIGHBORSToBytes(DataNeighbors data){
+		public byte[] NEIGHBORSToBytes(DataNeighbors data) {
 			/*
 			 * OPERATION CODE(1) + QTD_PEERS(1) + LISTA DE PEERS
 			 * Onde cada peer cont√©m o seu ip, e o InetAddres
 			 * tem tamanho 4(bytes).
 			 * */
-			byte[] bytes = new byte[1 +
-			                        data.getPeers().size() +
-			                        ( 4 * data.getPeers().size())];
+			byte[] bytes = new byte[1 + 1 + (4 * data.getPeers().size())];
 			
 			//header
 			bytes[0] = OperationCode.enumToByte(data.getOperations().get(0));
@@ -223,6 +222,56 @@ public class IOData {
 			}
 
 			return data;		
+		}
+		
+		/**
+		 * MÈtodo especÌfico que converte um DataMusicTransfer
+		 * em um array de bytes
+		 **/
+		public byte[] MUSICTRANSFERtoBytes(DataMusicTransfer data) {
+			/*
+			 * OPERATION CODE(1) + OFFSET(4) + LENGTH(4) + CONTENT
+			 * Onde offset representa qual o byte inicial,
+			 * length a quantidade a ser lida e content o conteudo
+			 * */
+			//Aloca quantidade de bytes necess·rios
+			byte[] bytes = new byte[1 + (4 * 1) + (4 * 1) + data.content.length];
+			//Converte os int em um array de bytes		
+			byte[] off = ByteBuffer.allocate(4).putInt(data.getOffset()).array();
+			byte[] len = ByteBuffer.allocate(4).putInt(data.getLength()).array();
+			//Atribui os valores no array
+			bytes[0] = OperationCode.enumToByte(data.getOperations().get(0));
+			//Copia array de bytes para array de bytes - (src, posSrc, dest, posDest, qtd)
+			System.arraycopy(off, 0, bytes, 1, 4);
+			System.arraycopy(len, 0, bytes, 5, 4);
+			System.arraycopy(data.content, 0, bytes, 9, data.content.length);
+			
+			return bytes;	
+		}
+		
+		/**
+		 * MÈtodo que converte um array de bytes em um DataMusicTransfer
+		 **/
+		public DataMusicTransfer bytesToMUSICTRANSFER(byte[] bytes) {
+			DataMusicTransfer data = new DataMusicTransfer();
+			
+			byte[] off = new byte[4];
+			byte[] len = new byte[4];
+			
+			System.arraycopy(bytes, 1, off, 0, 4);
+			System.arraycopy(bytes, 5, len, 0, 4);
+			
+			ByteBuffer offWrapper = ByteBuffer.wrap(off);
+			ByteBuffer lenWrapper = ByteBuffer.wrap(len);
+			
+			byte[] cont = new byte[lenWrapper.getInt()];
+			System.arraycopy(bytes, 9, cont, 0, (bytes.length - 9));
+			
+			data.getOperations().add(OperationCode.byteToEnum(bytes[0])); 
+			data.setOffset(offWrapper.getInt());
+			data.setLength(lenWrapper.getInt());
+			data.setContent(cont);
+			return data;
 		}
 		
 		/**
