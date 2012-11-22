@@ -4,12 +4,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import router.Peer;
 
 /**
- * Thread que ficara responsável por receber um arquivo(ou pedaço dele),
+ * Thread que ficara responsï¿½vel por receber um arquivo(ou pedaï¿½o dele),
  * recebendo de um determinado peer.
  * 
  * IrÃ¡ realizar uma conexÃ£o com um peer, pedindo o arquivo.
@@ -32,15 +33,18 @@ public class Receiver implements Runnable {
 	/** Quantidade de bytes que serÃ¡ lido do arquivo */
 	private int length;
 	
-	/** Transfer que será usado no método run, que juntará as partes do arquivo **/
+	/** Transfer que serï¿½ usado no mï¿½todo run, que juntarï¿½ as partes do arquivo **/
 	private Transfer transfer;
 	
-	public Receiver(Transfer transfer, Socket socket, int offset, int length) {
+	/** Porta usanda para conexÃ£o*/
+	private int port;
+	
+	public Receiver(Transfer transfer, int port, Peer peer, int offset, int length) {
 		this.transfer = transfer;
-		this.setSocket(socket);
 		this.setOffset(offset);
 		this.setLength(length);
-		
+		this.setPeer(peer);
+		this.setPort(port);
 		this.createStreams();
 		this.sendInfo();
 	}
@@ -64,6 +68,20 @@ public class Receiver implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void send(ArrayList<DataType> data){
+		this.stream.send(data);
+	}
+	
+	public void send(DataType data){
+		this.stream.send(this.dataTypeToArray(data));
+	}
+	
+	private ArrayList<DataType> dataTypeToArray(DataType data){
+		ArrayList<DataType> dataList = new ArrayList<>();
+		dataList.add(data);
+		return dataList;
 	}
 
 	/**
@@ -96,10 +114,15 @@ public class Receiver implements Runnable {
 	}
 	
 	/**
-	 * Método que concatena as partes recebidas do arquivo 
+	 * Mï¿½todo que concatena as partes recebidas do arquivo 
 	 **/
 	@Override
 	public void run() {
+		this.connect();
+		this.createStreams();
+		DataMusicTransfer askData = new DataMusicTransfer(
+				this.transfer.getFile().getName(), this.offset,this.length);
+		this.send(askData);
 		ArrayList<DataType> dataList = this.receive();
 		
 		/* if (this.checkFile(dataList)){
@@ -114,6 +137,17 @@ public class Receiver implements Runnable {
 		this.closeConnection();
 	}
 
+	public void connect() {
+		try {
+			this.socket = new Socket(this.peer.getIp(), this.port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	/**Getters e Setters*/
 	public Peer getPeer() {
 		return peer;
@@ -153,5 +187,21 @@ public class Receiver implements Runnable {
 
 	public void setLength(int length) {
 		this.length = length;
+	}
+	
+	public Transfer getTransfer() {
+		return transfer;
+	}
+
+	public void setTransfer(Transfer transfer) {
+		this.transfer = transfer;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
 	}
 }

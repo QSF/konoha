@@ -3,6 +3,7 @@ package file.transfer;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -36,12 +37,23 @@ public class Transfer implements Runnable {
 	}
 	
 	@Override
-	public void run(){
+	public void run() {
+		this.Decision();
 		
+		int offset = 0;
+		int length = 0;
+		for (Peer peer: peers){
+			length = (int) ((peer.getPercent() * this.file.getSize()) / 100);
+			
+			Thread thread = new Thread(new Receiver(this, 12346, peer, offset, length));
+			thread.start();
+			
+			offset = offset + length;
+		}
 	}
 	
 
-	/** Método que grava efetivamente a música na Pasta 
+	/** Mï¿½todo que grava efetivamente a mï¿½sica na Pasta 
 	 * @throws IOException 
 	 */
 	public void saveFile() throws IOException {    
@@ -58,9 +70,9 @@ public class Transfer implements Runnable {
 	}
 	
 	/**
-	 * Método que faz a tomada de decisão sobre a divisão do arquivo, tendo
-	 * como critério o menor ping entre os peers que possuem o arquivo. Quanto
-	 * menor o ping do peer, maior o tamanho do arquivo que ele irá enviar.
+	 * Mï¿½todo que faz a tomada de decisï¿½o sobre a divisï¿½o do arquivo, tendo
+	 * como critï¿½rio o menor ping entre os peers que possuem o arquivo. Quanto
+	 * menor o ping do peer, maior o tamanho do arquivo que ele irï¿½ enviar.
 	 * @return ArrayList<Peers>
 	 */
 	public ArrayList<Peer> Decision() {
@@ -103,7 +115,8 @@ public class Transfer implements Runnable {
 		
 		this.peers.get(0).setPercent((this.peers.get(0).getPercent() + (100 - sum)));
 		return this.peers;
-
+	}
+	
 	/**
 	 * MÃ©todo que encerra uma tranferÃªncia.
 	 * */
