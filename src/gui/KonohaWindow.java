@@ -35,6 +35,9 @@ public class KonohaWindow extends JFrame {
 		this.setInputPanel(new InputPanel());
 		this.setPeersPanel(new PeersPanel());
 		
+		//adiciona o listener do evento.
+		this.getInputPanel().getSearchButton().addActionListener(new SearchListener());
+		
 		this.getHeaderPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getInputPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getPeersPanel().setAlignmentX(Component.LEFT_ALIGNMENT);

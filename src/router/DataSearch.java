@@ -12,6 +12,8 @@ public class DataSearch extends DataType{
 	 *  numa rede de computadores antes de serem descartados.
 	 */
 	private byte TTL;
+	
+	private Peer peer;
 
 	public String getFileName() {
 		return fileName;
@@ -27,6 +29,14 @@ public class DataSearch extends DataType{
 
 	public void setTTL(byte tTL) {
 		TTL = tTL;
+	}
+
+	public Peer getPeer() {
+		return peer;
+	}
+
+	public void setPeer(Peer peer) {
+		this.peer = peer;
 	}
 	
 	

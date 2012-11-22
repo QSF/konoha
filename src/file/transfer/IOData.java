@@ -199,6 +199,13 @@ public class IOData {
 		}
 		
 		/**
+		 * Método que atribui que passa o operation code END do dataType para bytes 
+		 * */
+		public byte[] ENDToBytes(DataType data){
+			return OperationCodeToByte(data);
+		}
+		
+		/**
 		 * Método que atribui que passa o operation code ASKNEIGHBORS do dataType para bytes 
 		 * */
 		public byte[] ASKNEIGHBORSToBytes(DataType data){
@@ -344,6 +351,14 @@ public class IOData {
 		 * para um dataType com o  operation code ASKNEIGHBORS   
 		 * */
 		public DataType bytesToASKNEIGHBORS(byte[] bytes){
+			return byteToOperationCode(bytes);		
+		}
+		
+		/**
+		 * Método que atribui que passa um array de bytes
+		 * para um dataType com o  operation code END
+		 * */
+		public DataType bytesToEND(byte[] bytes){
 			return byteToOperationCode(bytes);		
 		}
 		

@@ -13,6 +13,7 @@ public class RouterConfig {
     private String fileName;
     private int port;
     private int connections;
+    private int ttl;
     
     
     public RouterConfig(){
@@ -34,6 +35,8 @@ public class RouterConfig {
             this.setPort(Integer.parseInt(this.prop.getProperty("port")));
             this.setConnections(Integer.parseInt(
             		this.prop.getProperty("connections") ));
+            this.setConnections(Integer.parseInt(
+            		this.prop.getProperty("ttl") ));
         }catch (IOException ex) {
                 ex.printStackTrace();
         }
@@ -54,6 +57,14 @@ public class RouterConfig {
 
 	public void setConnections(int connections) {
 		this.connections = connections;
+	}
+
+	public int getTtl() {
+		return ttl;
+	}
+
+	public void setTtl(int ttl) {
+		this.ttl = ttl;
 	}
     
     

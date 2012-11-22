@@ -28,9 +28,10 @@ public class RouterSender implements Runnable{
 		
 	}
 	
-	public RouterSender(Peer peer, int port){
+	public RouterSender(Peer peer, int port, DataType data){
 		this.peer = peer;
 		this.port = port;
+		this.data = data;
 	}
 	
 	public void connect() {
@@ -103,6 +104,16 @@ public class RouterSender implements Runnable{
 		Registry.getInstance().getRouter().addPeers(
 				dataNeighbor.getPeers());
 		
+		//fecha o thread.
+		this.runCondition = false;
+	}
+	
+	/**
+	 * Método que pergunta se o determinado peer possui um arquivo.
+	 * */
+	public void SEARCHAction(DataType data){		
+		//pede os peers.
+		this.send(this.data);		
 		//fecha o thread.
 		this.runCondition = false;
 	}

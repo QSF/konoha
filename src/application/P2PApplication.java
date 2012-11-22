@@ -1,7 +1,10 @@
 package application;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import router.Peer;
 import router.Router;
 import file.transfer.Transfer;
 
@@ -23,13 +26,31 @@ public class P2PApplication {
 	
 	private Transfer transfer;
 	
-	public void initTransfer(String fileName){
+	private Peer myPeer;
+	
+	public P2PApplication() {
+		this.myPeer = new Peer();
+		try {
+			this.myPeer.setIp(Inet4Address.getLocalHost());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void initTransfer(String fileName,String initialIp){
 		this.transfer = new Transfer(fileName);
 		Thread thread = new Thread(this.transfer);
 		thread.start();
+		Router router = Registry.getInstance().getRouter();
 		
-		//liga o roteamento.
-		Registry.getInstance().getRouter().searchFile(fileName);
+		Peer peer = new Peer();
+		try {
+			peer.setIp(Inet4Address.getByName(initialIp));
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		router.askNeighbors(peer);
+		router.searchFile(fileName,this.myPeer);
 	}
 
 	public ArrayList<DataFile> getFiles() {

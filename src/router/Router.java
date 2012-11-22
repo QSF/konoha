@@ -2,6 +2,9 @@ package router;
 
 import java.util.ArrayList;
 
+import file.transfer.DataType;
+import file.transfer.OperationCode;
+
 import application.RouterConfig;
 
 /**
@@ -17,12 +20,13 @@ public class Router {
 	
 	/**Fica ouvindo os pedidos de roteamento*/
 	private RouterListener routerListener;
+	private RouterConfig config;
 	
 	public Router(){
 		//pega as configurações.
-		RouterConfig config = new RouterConfig();
+		this.config = new RouterConfig();
 		RouterListener routerListener = new RouterListener(
-				config.getPort(),config.getConnections());
+				this.config.getPort(),this.config.getConnections());
 		
 		this.setRouterListener(routerListener);
 		//inicializa o listener.
@@ -45,9 +49,32 @@ public class Router {
 	 * Os peers que possuem vão responder diretamente para
 	 * o transfer, adicionando em sua lista de peers.
 	 * */
-	public void searchFile(String fileName){
-		//para cada peer, cria um Sender e faz o pedido
-		//de um arquivo.
+	public void searchFile(String fileName,Peer peer){
+		DataSearch dataSearch = new DataSearch();
+		dataSearch.setFileName(fileName);
+		dataSearch.setTTL((byte) this.config.getTtl());
+		dataSearch.setPeer(peer);
+		
+		for (Peer p: this.peers){
+			this.search(p,dataSearch);
+		}
+	}
+	
+	protected void search(Peer peer, DataSearch data) {
+		RouterSender sender = new RouterSender(peer, this.config.getPort(),data);
+		Thread thread = new Thread(sender);
+		thread.start();
+	}
+	
+	/**
+	 * Atualiza a lista de vizinhos de acordo com um peer.
+	 * */
+	public void askNeighbors(Peer peer){
+		DataType data = new DataType();
+		data.getOperations().add(OperationCode.ASKNEIGHBORS);
+		RouterSender sender = new RouterSender(peer, this.config.getPort(),data);
+		Thread thread = new Thread(sender);
+		thread.start();
 	}
 	
 	synchronized public void addPeers(ArrayList<Peer> peers){

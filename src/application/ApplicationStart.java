@@ -6,9 +6,6 @@ import router.Router;
 public class ApplicationStart {
 
 	public static void main(String[] args) {
-		//cria um Router.
-		//cria um P2P application
-		//cria uma window
 		
 		Router router = new Router();
 		Registry.getInstance().setRouter(router);
