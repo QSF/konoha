@@ -68,7 +68,8 @@ public class Router {
 		dataSearch.setPeer(peer);
 		
 		for (Peer p: this.peers){
-			this.search(p,dataSearch);
+			if (!p.getIp().equals(peer.getIp()))
+				this.search(p,dataSearch);
 		}
 	}
 	
@@ -98,8 +99,6 @@ public class Router {
 	synchronized public void addPeer(Peer peer){
 		boolean contains = false;
 		
-		System.out.println("Candidado a vizinho: " + peer.getIp());
-		System.out.println("Meu ip: " + myPeer.getIp());
 		if (peer.getIp().equals(this.myPeer.getIp()) )//não sou meu vizinho.
 			return;
 		

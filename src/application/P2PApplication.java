@@ -49,12 +49,8 @@ public class P2PApplication {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Meus vizinhos");
-		for (Peer p: router.getPeers())
-			System.out.println(p.getIp());
 		
-		router.askNeighbors(peer);
-//		router.searchFile(fileName,this.myPeer);
+		router.searchFile(fileName,this.myPeer);
 	}
 
 	public ArrayList<DataFile> getFiles() {
@@ -71,5 +67,13 @@ public class P2PApplication {
 
 	public void setTransfer(Transfer transfer) {
 		this.transfer = transfer;
+	}
+	
+	/**
+	 * Método que pesquisa se no diretório de arquivos
+	 * há algúm arquivo com este nome. 
+	 * */
+	public boolean hasFile(String fileName) {
+		return false;
 	}
 }
