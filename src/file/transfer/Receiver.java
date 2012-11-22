@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import router.Peer;
 
 /**
- * Thread que ficara respons√°vel por receber um arquivo(ou peda√ßo dele),
+ * Thread que ficara respons·vel por receber um arquivo(ou pedaÁo dele),
  * recebendo de um determinado peer.
  * 
  * Ir√° realizar uma conex√£o com um peer, pedindo o arquivo.
@@ -29,10 +29,14 @@ public class Receiver implements Runnable {
 	/**Byte inicial que ser√° pego do arquivo*/
 	private int offset;
 	
-	/**Quantidade de bytes que ser√° lido do arquivo*/
+	/** Quantidade de bytes que ser√° lido do arquivo */
 	private int length;
 	
-	public Receiver(Socket socket, int offset, int length) {
+	/** Transfer que ser· usado no mÈtodo run, que juntar· as partes do arquivo **/
+	private Transfer transfer;
+	
+	public Receiver(Transfer transfer, Socket socket, int offset, int length) {
+		this.transfer = transfer;
 		this.setSocket(socket);
 		this.setOffset(offset);
 		this.setLength(length);
@@ -91,15 +95,22 @@ public class Receiver implements Runnable {
 		return false;
 	}
 	
+	/**
+	 * MÈtodo que concatena as partes recebidas do arquivo 
+	 **/
 	@Override
 	public void run() {
+		ArrayList<DataType> dataList = this.receive();
 		
-		ArrayList<DataType> dataList = this.receive();			
-		if (this.checkFile(dataList)){//checa a integridade
-			//adiciona os bytes para o arquivo.
-//			Registry.getInstance().getTransfer().setBytesToFile(
-//					this.getOffset(), this.getLength(),dataList);
-		}
+		/* if (this.checkFile(dataList)){
+			checa a integridade
+			adiciona os bytes para o arquivo.
+			Registry.getInstance().getTransfer().setBytesToFile(this.getOffset(), this.getLength(),dataList);
+		} */
+		
+		DataMusicTransfer data = (DataMusicTransfer) dataList.get(0);
+		System.arraycopy(data.getContent(), 0, this.transfer.getFile().getContent(), 
+						 data.getOffset(), data.getLength());
 		this.closeConnection();
 	}
 
