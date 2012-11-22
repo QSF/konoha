@@ -11,13 +11,18 @@ import application.DataFile;
 public class Transfer implements Runnable{
 	
 	/**Lista de peers que possuem o arquivos*/
-	private ArrayList<Receiver> receivers;
+	private ArrayList<Receiver> receivers = new ArrayList<>();
 	
 	/**Lista de peers que possuem o arquivos*/
-	private ArrayList<Peer> peers;
+	private ArrayList<Peer> peers = new ArrayList<>();
 	
 	/**Lista de peers que possuem o arquivos*/
 	private DataFile file;
+	
+	public Transfer(String fileName){
+		this.file = new DataFile();
+		this.file.setName(fileName);
+	}	
 	
 	public Transfer(ArrayList<Peer> peers, DataFile file){
 		this.setPeers(peers);
@@ -26,6 +31,13 @@ public class Transfer implements Runnable{
 	
 	@Override
 	public void run(){
+		
+	}
+	
+	/**
+	 * Método que encerra uma tranferência.
+	 * */
+	public void close(){
 		
 	}
 	
@@ -53,5 +65,4 @@ public class Transfer implements Runnable{
 	public void setFile(DataFile file) {
 		this.file = file;
 	}
-	
 }

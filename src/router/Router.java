@@ -39,6 +39,26 @@ public class Router {
 		
 	}
 	
+	/**
+	 * Método que pergunta para os peers,
+	 * sobre um determinado arquivo.
+	 * Os peers que possuem vão responder diretamente para
+	 * o transfer, adicionando em sua lista de peers.
+	 * */
+	public void searchFile(String fileName){
+		//para cada peer, cria um Sender e faz o pedido
+		//de um arquivo.
+	}
+	
+	synchronized public void addPeers(ArrayList<Peer> peers){
+		this.peers.addAll(peers);
+	}
+	
+	synchronized public void addPees(Peer peer){
+		if (!this.peers.contains(peer))
+			this.peers.add(peer);
+	}
+	
 	/**Getters e setters*/
 	
 	public ArrayList<Peer> getPeers() {
