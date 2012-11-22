@@ -98,6 +98,8 @@ public class Router {
 	synchronized public void addPeer(Peer peer){
 		boolean contains = false;
 		
+		System.out.println("Candidado a vizinho: " + peer.getIp());
+		System.out.println("Meu ip: " + myPeer.getIp());
 		if (peer.getIp().equals(this.myPeer.getIp()) )//não sou meu vizinho.
 			return;
 		
