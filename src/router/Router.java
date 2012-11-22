@@ -1,5 +1,7 @@
 package router;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import file.transfer.DataType;
@@ -18,6 +20,8 @@ public class Router {
 	/**Nome do arquivo*/
 	private String fileName;
 	
+	private Peer myPeer;
+	
 	/**Fica ouvindo os pedidos de roteamento*/
 	private RouterListener routerListener;
 	private RouterConfig config;
@@ -32,6 +36,13 @@ public class Router {
 		//inicializa o listener.
 		Thread thread = new Thread(routerListener);
 		thread.start();
+		
+		this.myPeer = new Peer();
+		try {
+			this.myPeer.setIp(Inet4Address.getLocalHost());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -86,6 +97,9 @@ public class Router {
 	
 	synchronized public void addPeer(Peer peer){
 		boolean contains = false;
+		
+		if (peer.getIp().equals(this.myPeer.getIp()) )//não sou meu vizinho.
+			return;
 		
 		for (Peer oldPeer : this.peers){
 			if ( oldPeer.getIp().equals(peer.getIp()) ){
