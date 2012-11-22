@@ -4,7 +4,7 @@ package file.transfer;
  * Enum que representa qual operações o pacote representa.
  * */
 public enum OperationCode {
-	ASKNEIGHBORS,NEIGHBORS;
+	ASKNEIGHBORS,NEIGHBORS,END;
 	
 	/**
 	 * Converte um byte para Operation code.

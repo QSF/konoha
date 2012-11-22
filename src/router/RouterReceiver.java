@@ -7,12 +7,11 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import javax.imageio.spi.RegisterableService;
-
 import application.Registry;
 
 import file.transfer.DataType;
 import file.transfer.IOData;
+import file.transfer.OperationCode;
 
 /**
  * Classe que representa uma conexão da router.
@@ -23,6 +22,7 @@ public class RouterReceiver implements Runnable {
 	private Peer peer;
 	private IOData stream;
 	private Socket connection;
+	private boolean runCondition;
 	
 	public RouterReceiver(Socket connection){
 		this.connection = connection;
@@ -76,8 +76,9 @@ public class RouterReceiver implements Runnable {
 
 	@Override
 	public void run(){
-		boolean runCondition = true;
-		while(runCondition){
+		this.runCondition = true;
+		
+		while(this.runCondition){
 			ArrayList<DataType> dataList = this.receive();
 			
 			//chama um método que trata o protocolo
@@ -90,6 +91,7 @@ public class RouterReceiver implements Runnable {
 					method.invoke(this, data);
 				} catch (Exception ex) {
 					ex.printStackTrace();
+					this.runCondition = false;
 				}
 			}
 		}	
@@ -111,6 +113,22 @@ public class RouterReceiver implements Runnable {
 		dataNeighbor.setPeers((ArrayList<Peer>) peers.clone());
 		
 		//envia a lista de peers.
-		this.send(data);
+		this.send(dataNeighbor);
+		//fecha o thread.
+		this.runCondition = false;
+	}
+	
+	/**
+	 * Responde que está vivo, e fecha a conexão.
+	 * A resposta é feita apenas enviando um END.
+	 * */
+	public void ISALIVEAction(DataType data){
+		DataType dataType = new DataType();
+		dataType.getOperations().add(OperationCode.END);
+		
+		//envia a lista de peers.
+		this.send(dataType);
+		//fecha o thread.
+		this.runCondition = false;
 	}
 }

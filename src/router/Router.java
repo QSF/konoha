@@ -2,6 +2,8 @@ package router;
 
 import java.util.ArrayList;
 
+import application.RouterConfig;
+
 /**
  * Classe responsável pelo roteamento.
  * */
@@ -16,10 +18,24 @@ public class Router {
 	/**Fica ouvindo os pedidos de roteamento*/
 	private RouterListener routerListener;
 	
+	public Router(){
+		//pega as configurações.
+		RouterConfig config = new RouterConfig();
+		RouterListener routerListener = new RouterListener(
+				config.getPort(),config.getConnections());
+		
+		this.setRouterListener(routerListener);
+		//inicializa o listener.
+		Thread thread = new Thread(routerListener);
+		thread.start();
+	}
+	
 	/**
-	 * Método que encontra os peers vizinhos.
+	 * Método que encontra os peers vizinhos,
+	 * dado um determinado peer.
 	 * */
-	public void findNeighbor(){
+	public void findNeighbors(Peer peer){
+		//abri um socket.
 		
 	}
 	
