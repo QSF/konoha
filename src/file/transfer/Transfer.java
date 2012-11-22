@@ -8,6 +8,7 @@ import java.util.Collections;
 
 import router.Peer;
 import application.DataFile;
+import application.Registry;
 
 /**
  *	Classe respons√°vel pela parte de transfer√™ncia de arquivos.
@@ -23,7 +24,6 @@ public class Transfer implements Runnable {
 	
 	/**Lista de peers que possuem o arquivos*/
 	private DataFile file;
-	
 
 	public Transfer(String fileName){
 		this.file = new DataFile();
@@ -35,16 +35,26 @@ public class Transfer implements Runnable {
 		this.setFile(file);
 	}
 	
+	protected void calculatePing(){
+		DataType data = new DataType();
+		data.getOperations().add(OperationCode.ISALIVE);
+		for (Peer peer: this.peers){
+			Registry.getInstance().getRouter().search(peer, data);
+		}
+		//para cada peer.
+		//crie um thread para conectar com o ping e calcular o ping.
+	}
+	
 	@Override
 	public void run(){
 		//espera 10 segundos.
-		//calcula o ping.
+		//calcula o valor dos pings.
+		this.calculatePing();
 		//divide.
 		//cria um receiver para cada peer.
 	}
-	
 
-	/** MÈtodo que grava efetivamente a m˙sica na Pasta 
+	/** M√©todo que grava efetivamente a m√∫sica na Pasta 
 	 * @throws IOException 
 	 */
 	public void saveFile() throws IOException {    
@@ -53,7 +63,6 @@ public class Transfer implements Runnable {
 			fos = new FileOutputStream(this.file.getName() + ".mp3");	
 			fos.write(this.file.getContent());
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			fos.close();
@@ -61,9 +70,9 @@ public class Transfer implements Runnable {
 	}
 	
 	/**
-	 * MÈtodo que faz a tomada de decis„o sobre a divis„o do arquivo, tendo
-	 * como critÈrio o menor ping entre os peers que possuem o arquivo. Quanto
-	 * menor o ping do peer, maior o tamanho do arquivo que ele ir· enviar.
+	 * M√©todo que faz a tomada de decis√£o sobre a divis√£o do arquivo, tendo
+	 * como crit√©rio o menor ping entre os peers que possuem o arquivo. Quanto
+	 * menor o ping do peer, maior o tamanho do arquivo que ele ir√° enviar.
 	 * @return ArrayList<Peers>
 	 */
 	public ArrayList<Peer> Decision() {
@@ -106,6 +115,7 @@ public class Transfer implements Runnable {
 		
 		this.peers.get(0).setPercent((this.peers.get(0).getPercent() + (100 - sum)));
 		return this.peers;
+	}
 
 	/**
 	 * M√©todo que encerra uma tranfer√™ncia.

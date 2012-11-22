@@ -7,11 +7,12 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import application.Registry;
-
 import file.transfer.DataType;
 import file.transfer.IOData;
+import file.transfer.OperationCode;
 
 public class RouterSender implements Runnable{
 	
@@ -125,6 +126,24 @@ public class RouterSender implements Runnable{
 	public void ANSWERAction(DataAnswer data){		
 		//informa que possui o arquivo..
 		this.send(this.data);		
+		//fecha o thread.
+		this.runCondition = false;
+	}
+	
+	/**
+	 * Pergunta se um peer está vivo, calculando seu ping.
+	 * O set ping armazena o resultado.
+	 * */
+	public void ISALIVEAction(DataType data){
+		DataType dataType = new DataType();
+		dataType.getOperations().add(OperationCode.END);
+		
+		long initial = new Date().getTime();
+		this.send(dataType);
+		long finalTime = new Date().getTime();
+		int ping = (int) (finalTime - initial);
+		
+		this.peer.setPing(ping);
 		//fecha o thread.
 		this.runCondition = false;
 	}

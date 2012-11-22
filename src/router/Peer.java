@@ -8,7 +8,9 @@ import java.net.InetAddress;
  * */
 public class Peer {
 	private Inet4Address ip;
+	
 	private int ping;
+	
 	private int percent;
 	
 	public Inet4Address getIp() {
