@@ -51,11 +51,21 @@ public class Router {
 	}
 	
 	synchronized public void addPeers(ArrayList<Peer> peers){
-		this.peers.addAll(peers);
+		for (Peer peer : peers){
+			this.addPees(peer);
+		}
 	}
 	
 	synchronized public void addPees(Peer peer){
-		if (!this.peers.contains(peer))
+		boolean contains = false;
+		
+		for (Peer oldPeer : this.peers){
+			if (oldPeer.getIp().getHostAddress() == 
+					peer.getIp().getHostAddress())
+				contains = true;
+		}
+		
+		if (!contains)
 			this.peers.add(peer);
 	}
 	

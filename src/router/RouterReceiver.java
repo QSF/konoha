@@ -114,7 +114,7 @@ public class RouterReceiver implements Runnable {
 		
 		//envia a lista de peers.
 		this.send(dataNeighbor);
-		
+		//adiciona o cara na lista de peers(se ele não estiver).
 		Registry.getInstance().getRouter().addPees(this.peer);
 		//fecha o thread.
 		this.runCondition = false;

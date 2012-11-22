@@ -1,5 +1,6 @@
 package file.transfer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,7 +11,9 @@ import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import router.DataAnswer;
 import router.DataNeighbors;
+import router.DataSearch;
 import router.Peer;
 
 /**
@@ -144,7 +147,7 @@ public class IOData {
 			 * tem tamanho 4(bytes).
 			 * */
 			byte[] bytes = new byte[1 +
-			                        data.getPeers().size() +
+			                        1 +
 			                        ( 4 * data.getPeers().size())];
 			
 			//header
@@ -165,6 +168,95 @@ public class IOData {
 			
 			return bytes;
 		}
+		
+		/**
+		 * Método específico que transforma um DataSearch
+		 * em um array de bytes.
+		 * */
+		public byte[] SEARCHToBytes(DataSearch data){
+			/*
+			 * OPERATION CODE(1) + TTL(1) + FILE NAME
+			 * */
+			byte[] bytes = new byte[1 +
+			                        1 +
+			                        ( data.getFileName().length())];
+			
+			//header
+			bytes[0] = OperationCode.enumToByte(data.getOperations().get(0));
+			//time to live
+			bytes[1] = data.getTTL();
+			
+			ByteArrayOutputStream decoding = new ByteArrayOutputStream();
+			decoding.write(bytes[0]);
+			decoding.write(bytes[1]);
+			try {
+				decoding.write(data.getFileName().getBytes("UTF-8"));
+				return decoding.toByteArray();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		
+		/**
+		 * Método que atribui que passa o operation code ASKNEIGHBORS do dataType para bytes 
+		 * */
+		public byte[] ASKNEIGHBORSToBytes(DataType data){
+			return OperationCodeToByte(data);
+		}
+		
+		
+		/**
+		 * Método específico que transforma um DataAnswer
+		 * em um array de bytes.
+		 * */
+		public byte[] ANSWERToBytes(DataAnswer data){
+			/*
+			 * OPERATION CODE(1) + FILE NAME
+			 * */
+			byte[] bytes = new byte[1 + data.getFileName().length()];
+			
+			//header
+			bytes[0] = OperationCode.enumToByte(data.getOperations().get(0));
+						
+			ByteArrayOutputStream decoding = new ByteArrayOutputStream();
+			decoding.write(bytes[0]);
+			try {
+				decoding.write(data.getFileName().getBytes("UTF-8"));
+				return decoding.toByteArray();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+				
+		/**
+		 * Método que atribui que passa o operation code ISALIVE do dataType para bytes 
+		 * */
+		public byte[] ISALIVEToBytes(DataType data){
+			return OperationCodeToByte(data);
+		}
+		
+		
+		/**
+		 * Método que pega um DataType simples, só com operation code
+		 * e passa para bytes.
+		 */
+		private byte[] OperationCodeToByte(DataType data){
+			byte[] bytes = new byte[1];
+			bytes[0] = OperationCode.enumToByte(data.getOperations().get(0));
+			return bytes;
+		}
+		
+		/**
+		 * Método que converte um array de bytes em um DataType só com operation code
+		 * */
+		public DataType byteToOperationCode(byte[] bytes){
+			DataType data = new DataType();
+			data.getOperations().add(OperationCode.byteToEnum(bytes[0]));	
+			return data;
+		}
+		
 		
 		
 		/**
@@ -224,6 +316,65 @@ public class IOData {
 
 			return data;		
 		}
+		
+		/**
+		 * Método que converte um array de bytes em um DataSearch
+		 * */
+		public DataSearch bytesToSEARCH(byte[] bytes){
+			DataSearch data = new DataSearch();
+			
+			data.getOperations().add(OperationCode.byteToEnum(bytes[0]));
+			
+			data.setTTL(bytes[1]);
+			
+			String fileName = null;
+			try {
+				fileName = new String(bytes,2,bytes.length-1,"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			data.setFileName(fileName);
+			
+			return data;		
+		}
+		
+		/**
+		 * Método que atribui que passa um array de bytes
+		 * para um dataType com o  operation code ASKNEIGHBORS   
+		 * */
+		public DataType bytesToASKNEIGHBORS(byte[] bytes){
+			return byteToOperationCode(bytes);		
+		}
+		
+		/**
+		 * Método que converte um array de bytes em um DataAnswer
+		 * */
+		public DataAnswer bytesToANSWER(byte[] bytes){
+			DataAnswer data = new DataAnswer();
+			
+			data.getOperations().add(OperationCode.byteToEnum(bytes[0]));
+			
+			String fileName = null;
+			try {
+				fileName = new String(bytes,1,bytes.length-1,"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			data.setFileName(fileName);
+			
+			return data;			
+		}
+		
+		/**
+		 * Método que atribui que passa um array de bytes
+		 * para um dataType com o  operation code ISALIVE   
+		 * */
+		public DataType bytesToISALIVE(byte[] bytes){
+			return byteToOperationCode(bytes);		
+		}
+		
 		
 		/**
 		 * Método que fecha a conexão com os streams.
