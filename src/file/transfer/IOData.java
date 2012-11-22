@@ -225,16 +225,21 @@ public class IOData {
 		 * */
 		public byte[] ANSWERToBytes(DataAnswer data){
 			/*
-			 * OPERATION CODE(1) + FILE NAME
+			 * OPERATION CODE(1) + FILE SIZE(8) + FILE NAME
 			 * */
-			byte[] bytes = new byte[1 + data.getFileName().length()];
+			byte[] bytes = new byte[1 + 8 + data.getFileName().length()];
 			
 			//header
 			bytes[0] = OperationCode.enumToByte(data.getOperations().get(0));
 						
 			ByteArrayOutputStream decoding = new ByteArrayOutputStream();
 			decoding.write(bytes[0]);
+
+			//FILE SIZE
+			Long size = data.getSize();
+			decoding.write(size.byteValue());
 			try {
+				//FILE NAME
 				decoding.write(data.getFileName().getBytes("UTF-8"));
 				return decoding.toByteArray();
 			} catch (IOException e) {
@@ -390,12 +395,17 @@ public class IOData {
 		 * */
 		public DataAnswer bytesToANSWER(byte[] bytes){
 			DataAnswer data = new DataAnswer();
-			
+			//Operation Code
 			data.getOperations().add(OperationCode.byteToEnum(bytes[0]));
+			
+			byte[] size = new byte[8];
+			for (int i=0; i<8; i++)
+				size[i] = bytes[i+1];
+			
 			
 			String fileName = null;
 			try {
-				fileName = new String(bytes,1,bytes.length-1,"UTF-8");
+				fileName = new String(bytes,9,bytes.length-9,"UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
