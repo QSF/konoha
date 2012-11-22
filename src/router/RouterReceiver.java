@@ -203,4 +203,9 @@ public class RouterReceiver implements Runnable {
 		//fecha o thread.
 		this.runCondition = false;
 	}
+	
+	public void ENDAction(DataType data){		
+		//fecha o thread.
+		this.runCondition = false;
+	}
 }

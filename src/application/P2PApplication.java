@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -22,13 +23,14 @@ import file.transfer.Transfer;
 public class P2PApplication {
 	
 	/**Lista de arquivos do peer*/
-	private ArrayList<DataFile> files;
+	private ArrayList<DataFile> files = new ArrayList<>();
 	
 	private Transfer transfer;
 	
 	private Peer myPeer;
 	
 	public P2PApplication() {
+		this.updateFileList();
 		this.myPeer = new Peer();
 		try {
 			this.myPeer.setIp(Inet4Address.getLocalHost());
@@ -38,19 +40,45 @@ public class P2PApplication {
 	}
 	
 	public void initTransfer(String fileName,String initialIp){
-		this.transfer = new Transfer(fileName);
-		Thread thread = new Thread(this.transfer);
-		thread.start();
-		Router router = Registry.getInstance().getRouter();
-		
+//		Router router = Registry.getInstance().getRouter();
+
 		Peer peer = new Peer();
 		try {
 			peer.setIp(Inet4Address.getByName(initialIp));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		router.getPeers().add(peer);
-		router.searchFile(fileName,this.myPeer);
+		
+		ArrayList<Peer> peers = new ArrayList<>();
+		peers.add(peer);
+		
+		this.transfer = new Transfer(peers,fileName);
+		Thread thread = new Thread(this.transfer);
+		thread.start();
+		this.updateFileList();
+		//router.searchFile(fileName,this.myPeer);
+	}
+	
+	public void updateFileList(){
+		File dir = new File("arquivos");
+		
+		File[] fList = dir.listFiles();
+		if (fList == null)
+			return;
+		this.files.clear();
+		for ( int i = 0; i < fList.length; i++ ){
+			DataFile dataFile = new DataFile();
+			dataFile.setName(fList[i].getName());
+			dataFile.setSize(fList[i].length());
+			
+			this.files.add(dataFile);
+		}
+		this.printFiles();
+	}
+	
+	protected void printFiles() {
+		for (DataFile file : this.files)
+			System.out.println(file.getName());
 	}
 	
 	/**

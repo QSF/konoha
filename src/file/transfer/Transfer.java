@@ -30,9 +30,10 @@ public class Transfer implements Runnable {
 		this.file.setName(fileName);
 	}	
 
-	public Transfer(ArrayList<Peer> peers, DataFile file) {
+	public Transfer(ArrayList<Peer> peers, String fileName) {
 		this.setPeers(peers);
-		this.setFile(file);
+		this.file = new DataFile();
+		this.file.setName(fileName);
 	}
 	
 	protected void calculatePing(){
@@ -40,9 +41,10 @@ public class Transfer implements Runnable {
 		data.getOperations().add(OperationCode.ISALIVE);
 		for (Peer peer: this.peers){
 			Registry.getInstance().getRouter().search(peer, data);
+			System.out.println(peer.getPing());
 		}
 		//para cada peer.
-		//crie um thread para conectar com o ping e calcular o ping.
+		//crie um thread para conectar com o peer e calcular o ping.
 	}
 	
 	@Override
@@ -50,6 +52,10 @@ public class Transfer implements Runnable {
 		//espera 10 segundos.
 		//calcula o valor dos pings.
 		this.calculatePing();
+		for (Peer peer : this.peers){
+			System.out.println("O ip " + peer.getIp());
+			System.out.println("tem o ping " + peer.getPing());
+		}
 		//divide.
 		//cria um receiver para cada peer.
 	}
@@ -136,6 +142,18 @@ public class Transfer implements Runnable {
 		
 		if (!contains)
 			this.peers.add(peer);
+	}
+	
+	synchronized public void setPeer(Peer peer){
+		System.out.println("Me veio o ip: " + peer.getIp());
+		System.out.println("Com ping: " + peer.getPing());
+		for (int i = 0; i < this.peers.size(); i++){
+			Peer oldPeer = this.peers.get(i);
+			if ( oldPeer.getIp().equals(peer.getIp()) ){
+				oldPeer.setPing(peer.getPing());
+				break;
+			}
+		}
 	}
 	
 	/**Getters e setters*/

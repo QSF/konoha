@@ -140,10 +140,14 @@ public class RouterSender implements Runnable{
 		
 		long initial = new Date().getTime();
 		this.send(dataType);
-		long finalTime = new Date().getTime();
-		int ping = (int) (finalTime - initial);
 		
-		this.peer.setPing(ping);
+		long finalTime = new Date().getTime();
+		
+		int ping = (int) (finalTime - initial);		
+		
+		this.peer.setPing(ping);		
+		Registry.getInstance().getP2pApplication().getTransfer().setPeer(this.peer);
+		
 		//fecha o thread.
 		this.runCondition = false;
 	}
