@@ -6,7 +6,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+
+import router.DataNeighbors;
+import router.Peer;
 
 /**
  * Classe responsável por fazer toda a comunicação de rede.
@@ -128,6 +133,39 @@ public class IOData {
 			return null;
 		}
 		
+		/**
+		 * Método específico que transforma um DataNeighbors
+		 * em um array de bytes.
+		 * */
+		public byte[] NEIGHBORSToBytes(DataNeighbors data){
+			/*
+			 * OPERATION CODE(1) + QTD_PEERS(1) + LISTA DE PEERS
+			 * Onde cada peer contém o seu ip, e o InetAddres
+			 * tem tamanho 4(bytes).
+			 * */
+			byte[] bytes = new byte[1 +
+			                        data.getPeers().size() +
+			                        ( 4 * data.getPeers().size())];
+			
+			//header
+			bytes[0] = OperationCode.enumToByte(data.getOperations().get(0));
+			//qtd de peers
+			bytes[1] = (byte) data.getPeers().size();
+			
+			int i = 1;
+			
+			for (Peer peer : data.getPeers()){
+				byte[] addr = peer.getIp().getAddress();
+				
+				bytes[++i] = addr[0];
+				bytes[++i] = addr[1];
+				bytes[++i] = addr[2];
+				bytes[++i] = addr[3];				
+			}
+			
+			return bytes;
+		}
+		
 		
 		/**
 		 * Transforma um array de bytes em um DataType.
@@ -154,6 +192,37 @@ public class IOData {
 				e.printStackTrace();
 			}
 			return null;
+		}
+		
+		/**
+		 * Método que converte um array de bytes em um DataNeighbors
+		 * */
+		public DataNeighbors bytesToNEIGHBORS(byte[] bytes){
+			DataNeighbors data = new DataNeighbors();
+			
+			data.getOperations().add(OperationCode.byteToEnum(bytes[0]));
+			
+			byte neighborsSize = bytes[1];
+			
+			int i = 1;
+			for (int j = 0; j < neighborsSize; j++){
+				Peer peer = new Peer();
+				byte[] addr = new byte[4];
+				addr[0] = bytes[++i];
+				addr[1] = bytes[++i];
+				addr[2] = bytes[++i];
+				addr[3] = bytes[++i];
+				
+				try {
+					peer.setIp((Inet4Address) Inet4Address.getByAddress(addr));
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}
+				
+				data.getPeers().add(peer);
+			}
+
+			return data;		
 		}
 		
 		/**

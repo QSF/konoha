@@ -1,16 +1,18 @@
 package router;
 
+import java.net.Inet4Address;
+
 /**
  * Objeto que representa um peer.
  * */
 public class Peer {
-	private String ip;
+	private Inet4Address ip;
 	
-	public String getIp() {
+	public Inet4Address getIp() {
 		return ip;
 	}
 	
-	public void setIp(String ip) {
+	public void setIp(Inet4Address ip) {
 		//formatar.
 		this.ip = ip;
 	}
