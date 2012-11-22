@@ -49,7 +49,7 @@ public class P2PApplication {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		
+		System.out.println("Meus vizinhos");
 		for (Peer p: router.getPeers())
 			System.out.println(p.getIp());
 		
