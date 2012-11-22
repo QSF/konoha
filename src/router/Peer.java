@@ -1,6 +1,7 @@
 package router;
 
 import java.net.Inet4Address;
+import java.net.InetAddress;
 
 /**
  * Objeto que representa um peer.
@@ -12,8 +13,8 @@ public class Peer {
 		return ip;
 	}
 	
-	public void setIp(Inet4Address ip) {
+	public void setIp(InetAddress inetAddress) {
 		//formatar.
-		this.ip = ip;
+		this.ip = (Inet4Address) inetAddress;
 	}
 }
