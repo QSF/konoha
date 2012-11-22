@@ -51,6 +51,7 @@ public class Router {
 	 * */
 	public void searchFile(String fileName,Peer peer){
 		DataSearch dataSearch = new DataSearch();
+		dataSearch.getOperations().add(OperationCode.SEARCH);
 		dataSearch.setFileName(fileName);
 		dataSearch.setTTL((byte) this.config.getTtl());
 		dataSearch.setPeer(peer);
@@ -79,17 +80,18 @@ public class Router {
 	
 	synchronized public void addPeers(ArrayList<Peer> peers){
 		for (Peer peer : peers){
-			this.addPees(peer);
+			this.addPeer(peer);
 		}
 	}
 	
-	synchronized public void addPees(Peer peer){
+	synchronized public void addPeer(Peer peer){
 		boolean contains = false;
 		
 		for (Peer oldPeer : this.peers){
-			if (oldPeer.getIp().getHostAddress() == 
-					peer.getIp().getHostAddress())
+			if ( oldPeer.getIp().equals(peer.getIp()) ){
 				contains = true;
+				break;
+			}
 		}
 		
 		if (!contains)

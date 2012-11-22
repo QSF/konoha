@@ -111,7 +111,7 @@ public class RouterSender implements Runnable{
 	/**
 	 * Método que pergunta se o determinado peer possui um arquivo.
 	 * */
-	public void SEARCHAction(DataType data){		
+	public void SEARCHAction(DataSearch data){		
 		//pede os peers.
 		this.send(this.data);		
 		//fecha o thread.

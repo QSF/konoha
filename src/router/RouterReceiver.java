@@ -111,11 +111,11 @@ public class RouterReceiver implements Runnable {
 		//empacoto a requisição.
 		DataNeighbors dataNeighbor = new DataNeighbors();
 		dataNeighbor.setPeers((ArrayList<Peer>) peers.clone());
-		System.out.println("Aqui chegou!");
+		
 		//envia a lista de peers.
 		this.send(dataNeighbor);
 		//adiciona o cara na lista de peers(se ele não estiver).
-		Registry.getInstance().getRouter().addPees(this.peer);
+		Registry.getInstance().getRouter().addPeer(this.peer);
 		//fecha o thread.
 		this.runCondition = false;
 	}
