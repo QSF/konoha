@@ -41,7 +41,10 @@ public class P2PApplication {
 	
 	public void initTransfer(String fileName,String initialIp){
 //		Router router = Registry.getInstance().getRouter();
-
+		if (this.hasFile(fileName + ".mp3"))
+			System.out.println("Tem " + fileName);
+		else
+			System.out.println("N Tem " + fileName);
 		Peer peer = new Peer();
 		try {
 			peer.setIp(Inet4Address.getByName(initialIp));
@@ -56,7 +59,7 @@ public class P2PApplication {
 		Thread thread = new Thread(this.transfer);
 		thread.start();
 		this.updateFileList();
-		//router.searchFile(fileName,this.myPeer);
+		//router.searchFile(fileName + ".mp3",this.myPeer);
 	}
 	
 	public void updateFileList(){
@@ -73,12 +76,6 @@ public class P2PApplication {
 			
 			this.files.add(dataFile);
 		}
-		this.printFiles();
-	}
-	
-	protected void printFiles() {
-		for (DataFile file : this.files)
-			System.out.println(file.getName());
 	}
 	
 	/**
@@ -86,10 +83,22 @@ public class P2PApplication {
 	 * há algúm arquivo com este nome. 
 	 * */
 	public boolean hasFile(String fileName) {
-		return false;
+		boolean contains = false;
+		
+		for (DataFile file : this.files)
+			if (file.getName().equals(fileName)){
+				contains = true;
+				break;
+			}
+		
+		return contains;
 	}
 
 	public DataFile getFile(String fileName) {
+		for (DataFile file : this.files)
+			if (file.getName().equals(fileName))
+				return file;
+		
 		return null;
 	}
 
