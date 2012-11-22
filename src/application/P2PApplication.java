@@ -49,7 +49,7 @@ public class P2PApplication {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		
+		router.getPeers().add(peer);
 		router.searchFile(fileName,this.myPeer);
 	}
 

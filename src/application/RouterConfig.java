@@ -35,7 +35,7 @@ public class RouterConfig {
             this.setPort(Integer.parseInt(this.prop.getProperty("port")));
             this.setConnections(Integer.parseInt(
             		this.prop.getProperty("connections") ));
-            this.setConnections(Integer.parseInt(
+            this.setTtl(Integer.parseInt(
             		this.prop.getProperty("ttl") ));
         }catch (IOException ex) {
                 ex.printStackTrace();

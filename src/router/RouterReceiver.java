@@ -156,11 +156,13 @@ public class RouterReceiver implements Runnable {
 		
 		//diminui o TTL
 		data.setTTL((byte) (data.getTTL() - 1));
-		//repassa para os vizinhos.
-		for (Peer peer : Registry.getInstance().getRouter().getPeers()){
-			if (!peer.getIp().equals(data.getPeer().getIp()) &&//não envia para quem pede o arquivo
-				!peer.getIp().equals(this.peer.getIp())){//e nem para quem me passou.
-				Registry.getInstance().getRouter().search(peer, data);
+		if (data.getTTL() > 0){//TTL não pode ser 0
+			//repassa para os vizinhos.
+			for (Peer peer : Registry.getInstance().getRouter().getPeers()){
+				if (!peer.getIp().equals(data.getPeer().getIp()) &&//não envia para quem pede o arquivo
+					!peer.getIp().equals(this.peer.getIp())){//e nem para quem me passou.
+					Registry.getInstance().getRouter().search(peer, data);
+				}
 			}
 		}
 		
