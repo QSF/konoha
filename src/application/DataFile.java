@@ -9,7 +9,7 @@ public class DataFile {
 	private String name;
 	
 	/**Tamanho do arquivo*/
-	private long size;
+	private long size = -1;
 	
 	/** Conteudo do arquivo **/
 	private byte[] content;

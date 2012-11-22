@@ -9,6 +9,7 @@ import java.util.Collections;
 
 import router.Peer;
 import application.DataFile;
+import application.Registry;
 
 /**
  *	Classe responsável pela parte de transferência de arquivos.
@@ -24,20 +25,33 @@ public class Transfer implements Runnable {
 	
 	/**Lista de peers que possuem o arquivos*/
 	private DataFile file;
-	
 
 	public Transfer(String fileName){
 		this.file = new DataFile();
 		this.file.setName(fileName);
 	}	
 
-	public Transfer(ArrayList<Peer> peers, DataFile file) {
+	public Transfer(ArrayList<Peer> peers, String fileName) {
 		this.setPeers(peers);
-		this.setFile(file);
+		this.file = new DataFile();
+		this.file.setName(fileName);
+	}
+	
+	protected void calculatePing(){
+		DataType data = new DataType();
+		data.getOperations().add(OperationCode.ISALIVE);
+		for (Peer peer: this.peers){
+			Registry.getInstance().getRouter().search(peer, data);
+			System.out.println(peer.getPing());
+		}
+		//para cada peer.
+		//crie um thread para conectar com o peer e calcular o ping.
 	}
 	
 	@Override
 	public void run() {
+		//esperar um tempo
+		this.calculatePing();
 		this.Decision();
 		
 		int offset = 0;
@@ -51,9 +65,9 @@ public class Transfer implements Runnable {
 			offset = offset + length;
 		}
 	}
-	
 
-	/** M�todo que grava efetivamente a m�sica na Pasta 
+
+	/** Método que grava efetivamente a música na Pasta
 	 * @throws IOException 
 	 */
 	public void saveFile() throws IOException {    
@@ -62,7 +76,6 @@ public class Transfer implements Runnable {
 			fos = new FileOutputStream(this.file.getName() + ".mp3");	
 			fos.write(this.file.getContent());
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			fos.close();
@@ -70,9 +83,9 @@ public class Transfer implements Runnable {
 	}
 	
 	/**
-	 * M�todo que faz a tomada de decis�o sobre a divis�o do arquivo, tendo
-	 * como crit�rio o menor ping entre os peers que possuem o arquivo. Quanto
-	 * menor o ping do peer, maior o tamanho do arquivo que ele ir� enviar.
+	 * Método que faz a tomada de decisão sobre a divisão do arquivo, tendo
+	 * como critério o menor ping entre os peers que possuem o arquivo. Quanto
+	 * menor o ping do peer, maior o tamanho do arquivo que ele irá enviar.
 	 * @return ArrayList<Peers>
 	 */
 	public ArrayList<Peer> Decision() {
@@ -116,12 +129,38 @@ public class Transfer implements Runnable {
 		this.peers.get(0).setPercent((this.peers.get(0).getPercent() + (100 - sum)));
 		return this.peers;
 	}
-	
+
 	/**
 	 * Método que encerra uma tranferência.
 	 * */
 	public void close(){
 
+	}
+	
+	synchronized public void addPeer(Peer peer){
+		boolean contains = false;
+		
+		for (Peer oldPeer : this.peers){
+			if ( oldPeer.getIp().equals(peer.getIp()) ){
+				contains = true;
+				break;
+			}
+		}
+		
+		if (!contains)
+			this.peers.add(peer);
+	}
+	
+	synchronized public void setPeer(Peer peer){
+		System.out.println("Me veio o ip: " + peer.getIp());
+		System.out.println("Com ping: " + peer.getPing());
+		for (int i = 0; i < this.peers.size(); i++){
+			Peer oldPeer = this.peers.get(i);
+			if ( oldPeer.getIp().equals(peer.getIp()) ){
+				oldPeer.setPing(peer.getPing());
+				break;
+			}
+		}
 	}
 	
 	/**Getters e setters*/
