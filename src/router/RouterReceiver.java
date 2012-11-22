@@ -7,9 +7,8 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import application.P2PApplication;
+import application.DataFile;
 import application.Registry;
-
 import file.transfer.DataType;
 import file.transfer.IOData;
 import file.transfer.OperationCode;
@@ -148,10 +147,15 @@ public class RouterReceiver implements Runnable {
 		
 		
 		if (Registry.getInstance().getP2pApplication().hasFile(data.getFileName())){
-			DataType dataType = new DataType();
+			DataAnswer dataType = new DataAnswer();
 			dataType.getOperations().add(OperationCode.ANSWER);
-			this.send(dataType);
-			//envia um ANSEWER para o receiver.
+			
+			DataFile file = Registry.getInstance().getP2pApplication().getFile(data.getFileName());
+			dataType.setFileName(file.getName());
+			dataType.setSize(file.getSize());
+			//envia para o cliente.
+			//pois ele cria um RouterSender.
+			Registry.getInstance().getRouter().search(data.getPeer(), dataType);
 		}
 		
 		//diminui o TTL
@@ -175,31 +179,28 @@ public class RouterReceiver implements Runnable {
 	 * Esta lista de peers se encontra no Transfer.
 	 * É preciso checar o nome do arquivo.
 	 * */
-//	public void ANSWERAction(DataSearch data){
-//		System.out.println("Recebi um pedido de arquivo, do " + this.peer.getIp());
-//		System.out.println("Em nome do " + data.getPeer().getIp());
-//		System.out.println("Arquivo com nome: " + data.getFileName());
-//		System.out.println("TTL: " + data.getTTL());
-//		
-//		
-//		if (Registry.getInstance().getP2pApplication().hasFile(data.getFileName())){
-//			DataType dataType = new DataType();
-//			dataType.getOperations().add(OperationCode.ANSWER);
-//			this.send(dataType);
-//			//envia um ANSEWER para o receiver.
-//		}
-//		
-//		//diminui o TTL
-//		data.setTTL((byte) (data.getTTL() - 1));
-//		//repassa para os vizinhos.
-//		for (Peer peer : Registry.getInstance().getRouter().getPeers()){
-//			if (!peer.getIp().equals(data.getPeer().getIp()) &&//não envia para quem pede o arquivo
-//				!peer.getIp().equals(this.peer.getIp())){//e nem para quem me passou.
-//				Registry.getInstance().getRouter().search(peer, data);
-//			}
-//		}
-//		
-//		//fecha o thread.
-//		this.runCondition = false;
-//	}
+	public void ANSWERAction(DataAnswer data){
+		System.out.println("O peer " + this.peer.getIp());
+		System.out.println("Possui o arquivo " + data.getFileName());
+		System.out.println("Com o tamanho " + data.getSize());
+		
+		DataFile file = Registry.getInstance().getP2pApplication().getTransfer()
+			.getFile();
+		//checa o arquivo.
+		if (! file.getName().equals(data.getFileName()) ){
+			//o transfer atual deverá ser igual ao arquivo que este peer irá receber.
+			return;			
+		}
+		//seta o tamanho do arquivo.
+		if (file.getSize() == -1)//ainda não setaram o tamanho.
+			file.setSize(data.getSize());
+		
+		//adiciona o peer na lista do Transfer.
+		Registry.getInstance().getP2pApplication().getTransfer().addPeer(this.peer);
+		//tenta adicionar na lista de vizinhos.
+		Registry.getInstance().getRouter().addPeer(this.peer);
+		
+		//fecha o thread.
+		this.runCondition = false;
+	}
 }

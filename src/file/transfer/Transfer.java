@@ -31,7 +31,10 @@ public class Transfer implements Runnable{
 	
 	@Override
 	public void run(){
-		
+		//espera 10 segundos.
+		//calcula o ping.
+		//divide.
+		//cria um receiver para cada peer.
 	}
 	
 	/**
@@ -39,6 +42,20 @@ public class Transfer implements Runnable{
 	 * */
 	public void close(){
 		
+	}
+	
+	synchronized public void addPeer(Peer peer){
+		boolean contains = false;
+		
+		for (Peer oldPeer : this.peers){
+			if ( oldPeer.getIp().equals(peer.getIp()) ){
+				contains = true;
+				break;
+			}
+		}
+		
+		if (!contains)
+			this.peers.add(peer);
 	}
 	
 	/**Getters e setters*/

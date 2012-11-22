@@ -52,6 +52,18 @@ public class P2PApplication {
 		router.getPeers().add(peer);
 		router.searchFile(fileName,this.myPeer);
 	}
+	
+	/**
+	 * Método que pesquisa se no diretório de arquivos
+	 * há algúm arquivo com este nome. 
+	 * */
+	public boolean hasFile(String fileName) {
+		return false;
+	}
+
+	public DataFile getFile(String fileName) {
+		return null;
+	}
 
 	public ArrayList<DataFile> getFiles() {
 		return files;
@@ -67,13 +79,5 @@ public class P2PApplication {
 
 	public void setTransfer(Transfer transfer) {
 		this.transfer = transfer;
-	}
-	
-	/**
-	 * Método que pesquisa se no diretório de arquivos
-	 * há algúm arquivo com este nome. 
-	 * */
-	public boolean hasFile(String fileName) {
-		return false;
 	}
 }

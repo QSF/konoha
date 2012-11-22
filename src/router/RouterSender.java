@@ -119,6 +119,16 @@ public class RouterSender implements Runnable{
 		this.runCondition = false;
 	}
 	
+	/**
+	 * Método que informa um peer que ele possui um arquivo.
+	 * */
+	public void ANSWERAction(DataAnswer data){		
+		//informa que possui o arquivo..
+		this.send(this.data);		
+		//fecha o thread.
+		this.runCondition = false;
+	}
+	
 	public void closeConnection() {
 		try {
 			this.stream.close();

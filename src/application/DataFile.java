@@ -9,7 +9,7 @@ public class DataFile {
 	private String name;
 	
 	/**Tamanho do arquivo*/
-	private long size;
+	private long size = -1;
 	
 	/**Hash MD5 do conteúdo do arquivo, 
 	 * utilizado para verificar a integridade do mesmo.
