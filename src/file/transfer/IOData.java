@@ -336,7 +336,7 @@ public class IOData {
 			
 			String fileName = null;
 			try {
-				fileName = new String(bytes,2,bytes.length-1,"UTF-8");
+				fileName = new String(bytes,2,bytes.length-2,"UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
