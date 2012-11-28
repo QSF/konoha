@@ -7,10 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import router.Peer;
-import router.RouterReceiver;
-import router.RouterSender;
 import application.DataFile;
 import application.Registry;
+import application.TransferConfig;
 
 /**
  *	Classe responsável pela parte de transferência de arquivos.
@@ -28,8 +27,11 @@ public class Transfer implements Runnable {
 	private DataFile file;
 	
 	private int senderNumber;
+	
+	private TransferConfig transferConfig;
 
-	public Transfer(String fileName){
+	public Transfer(String fileName, TransferConfig transferConfig){
+		this.setTransferConfig(transferConfig);
 		this.file = new DataFile();
 		this.file.setName(fileName);
 	}	
@@ -62,36 +64,42 @@ public class Transfer implements Runnable {
 	public void run() {
 		//esperar um tempo
 		long initial = System.currentTimeMillis()/1000;
-		//espera 5 sec
+		//espera 5 sec, tempo máximo para esperar um peer.
 		while (System.currentTimeMillis()/1000 - initial < 5){}
 		
 		this.calculatePing();
+		this.decision();
 		
 		for (Peer peer : this.peers){
-			System.out.println("O peer " + peer.getIp() + " tem o ping: " + peer.getPing());
+			System.out.println("O peer " + peer.getIp() + " tem o %: " + peer.getPercent());
 		}
-//		this.decision();
-//		
-//		int offset = 0;
-//		int length = 0;
-//		for (Peer peer: peers){
-//			length = (int) ((peer.getPercent() * this.file.getSize()) / 100);
-//			
-//			Receiver receiver = new Receiver(this, 12346, peer, offset, length);
-//			this.receivers.add(receiver);
-//			Thread thread = new Thread(receiver);
-//			thread.start();
-//			
-//			offset = offset + length;
-//		}
-//		
+		int port = this.transferConfig.getPort();
+		int offset = 0;
+		int length = 0;
+		for (Peer peer: peers){
+			length = (int) ((peer.getPercent() * this.file.getSize()) / 100);
+			
+			System.out.println("Tamno do arquivo: " + this.file.getSize());
+			System.out.println("O peer " + peer.getIp() + " tem o %: " + peer.getPercent());
+			System.out.println("Que são " + length + " bytes do total.");
+			Receiver receiver = new Receiver(this, port, peer, offset, length);
+			this.receivers.add(receiver);
+			Thread thread = new Thread(receiver);
+			thread.start();
+			
+			offset = offset + length;
+		}
+		
 //		while (!this.receivers.isEmpty()){};
-//		//depois que transferiu todas as partes, salva.
-//		try {
-//			this.saveFile();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		initial = System.currentTimeMillis()/1000;
+		//espera 5 sec, tempo máximo para esperar um peer.
+		while (System.currentTimeMillis()/1000 - initial < 5){}
+		//depois que transferiu todas as partes, salva.
+		try {
+			this.saveFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -228,6 +236,14 @@ public class Transfer implements Runnable {
 
 	public void setSenderNumber(int senderNumber) {
 		this.senderNumber = senderNumber;
+	}
+
+	public TransferConfig getTransferConfig() {
+		return transferConfig;
+	}
+
+	public void setTransferConfig(TransferConfig transferConfig) {
+		this.transferConfig = transferConfig;
 	}
 
 }

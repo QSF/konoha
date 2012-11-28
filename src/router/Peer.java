@@ -13,6 +13,11 @@ public class Peer {
 	
 	private int percent;
 	
+	@Override
+	public String toString() {
+		return this.getIp().getHostAddress() + "    " + this.getPercent();
+	}
+	
 	public Inet4Address getIp() {
 		return ip;
 	}

@@ -8,8 +8,8 @@ public class NeighborsWindow extends JFrame {
 
 	private static final long serialVersionUID = 6103179736546789215L;
 	
-	public final static int WIDTH = 200;
-	public final static int HEIGHT = 300;
+	public final static int WIDTH = 250;
+	public final static int HEIGHT = 200;
 	
 	/**Contém a lista de peers*/
 	private PeersListPanel peersListPanel;
@@ -25,7 +25,7 @@ public class NeighborsWindow extends JFrame {
 		this.setSize(new Dimension(NeighborsWindow.WIDTH, 
 				NeighborsWindow.HEIGHT));
 		
-		this.setPeersListPanel(new PeersListPanel());
+		this.setPeersListPanel(new PeersListPanel("IP                        "));
 		
 		this.add(this.getPeersListPanel());
 		

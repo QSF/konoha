@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import file.transfer.DataType;
 import file.transfer.OperationCode;
 
+import application.Registry;
 import application.RouterConfig;
 
 /**
@@ -110,8 +111,28 @@ public class Router {
 			}
 		}
 		
-		if (!contains)
+		if (!contains){
 			this.peers.add(peer);
+			Registry.getInstance().getNeighborsWindow().getPeersListPanel().addPeer(peer);
+		}
+			
+	}
+	
+	synchronized public void removePeer(Peer peer){
+		boolean contains = false;
+		int i = 0;
+		for (Peer oldPeer : this.peers){
+			if ( oldPeer.getIp().equals(peer.getIp()) ){
+				contains = true;
+				break;
+			}
+			i++;
+		}
+		
+		if (contains){
+			this.peers.remove(i);
+			Registry.getInstance().getNeighborsWindow().getPeersListPanel().removePeer(peer);
+		}
 	}
 	
 	/**Getters e setters*/

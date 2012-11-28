@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import router.Peer;
 import router.Router;
+import file.transfer.Sender;
 import file.transfer.Transfer;
 
 /**
@@ -26,11 +27,19 @@ public class P2PApplication {
 	private ArrayList<DataFile> files = new ArrayList<>();
 	
 	private Transfer transfer;
+	/**Objeto que cria conexões que enviam os arquivos*/
+	private Sender sender;
 	
 	private Peer myPeer;
+	/**Arquivo que contém as informações de tranferência*/
+	private TransferConfig transferConfig = new TransferConfig();
 	
 	public P2PApplication() {
-		this.updateFileList();
+		int port = this.transferConfig.getPort();
+		int numberConnections = this.transferConfig.getConnections();
+		//este sender recebe pedido de transferência de arquivos.
+		this.setSender(new Sender(port, numberConnections));
+		
 		this.myPeer = new Peer();
 		try {
 			this.myPeer.setIp(Inet4Address.getLocalHost());
@@ -56,7 +65,7 @@ public class P2PApplication {
 	public void initTransfer(String fileName){
 		Router router = Registry.getInstance().getRouter();
 		fileName = fileName + ".mp3";
-		this.transfer = new Transfer(fileName);
+		this.transfer = new Transfer(fileName, this.transferConfig);
 		Thread thread = new Thread(this.transfer);
 		thread.start();
 		this.updateFileList();
@@ -119,5 +128,21 @@ public class P2PApplication {
 
 	public void setTransfer(Transfer transfer) {
 		this.transfer = transfer;
+	}
+
+	public Sender getSender() {
+		return sender;
+	}
+
+	public void setSender(Sender sender) {
+		this.sender = sender;
+	}
+
+	public TransferConfig getTransferConfig() {
+		return transferConfig;
+	}
+
+	public void setTransferConfig(TransferConfig transferConfig) {
+		this.transferConfig = transferConfig;
 	}
 }
