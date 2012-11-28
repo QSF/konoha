@@ -3,7 +3,7 @@ package file.transfer;
 public class DataMusicTransfer extends DataType {
 	private int offset;
 	private int length;
-	private byte[] content; 
+	private byte[] content = null; 
 	private String FileName;
 	
 	public DataMusicTransfer(String FileName, int offset, int length){

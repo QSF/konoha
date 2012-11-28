@@ -438,8 +438,11 @@ public class IOData {
 			 * Onde offset representa qual o byte inicial,
 			 * length a quantidade a ser lida e content o conteudo
 			 * */
-			//Aloca quantidade de bytes necess�rios
-			byte[] bytes = new byte[1 + (4 * 1) + (4 * 1) + data.getContent().length + data.getFileName().length()];
+			int contentSize = 0;
+			if (data.getContent() != null)
+				contentSize = data.getContent().length;
+			//Aloca quantidade de bytes necessários
+			byte[] bytes = new byte[1 + (4 * 1) + (4 * 1) + contentSize + data.getFileName().length()];
 			//Converte os int em um array de bytes		
 			byte[] off = ByteBuffer.allocate(4).putInt(data.getOffset()).array();
 			byte[] len = ByteBuffer.allocate(4).putInt(data.getLength()).array();
@@ -448,7 +451,8 @@ public class IOData {
 			//Copia array de bytes para array de bytes - (src, posSrc, dest, posDest, qtd)
 			System.arraycopy(off, 0, bytes, 1, 4);
 			System.arraycopy(len, 0, bytes, 5, 4);
-			System.arraycopy(data.getContent(), 0, bytes, 9, data.getContent().length);
+			if (data.getContent() != null)
+				System.arraycopy(data.getContent(), 0, bytes, 9, contentSize);
 			
 			ByteArrayOutputStream decoding = new ByteArrayOutputStream();
 			
