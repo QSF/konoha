@@ -434,12 +434,20 @@ public class IOData {
 		 **/
 		public byte[] MUSICTRANSFERToBytes(DataMusicTransfer data) {
 			/*
-			 * OPERATION CODE(1) + OFFSET(4) + LENGTH(4) + CONTENT + FILE NAME
+			 * OPERATION CODE(1) + OFFSET(4) + LENGTH(4) + HASCONTENT(1) + CONTENT + FILE NAME
 			 * Onde offset representa qual o byte inicial,
 			 * length a quantidade a ser lida e content o conteudo
 			 * */
-			//Aloca quantidade de bytes necess�rios
-			byte[] bytes = new byte[1 + (4 * 1) + (4 * 1) + data.getContent().length + data.getFileName().length()];
+			int contentSize = 0;
+			//indica se é pedido ou transferência.
+			byte hasContent = 0;
+			
+			if (data.getContent() != null){
+				contentSize = data.getContent().length;
+				hasContent = 1;
+			}
+			//Aloca quantidade de bytes necessários
+			byte[] bytes = new byte[1 + (4 * 1) + (4 * 1) + 1 + contentSize + data.getFileName().length()];
 			//Converte os int em um array de bytes		
 			byte[] off = ByteBuffer.allocate(4).putInt(data.getOffset()).array();
 			byte[] len = ByteBuffer.allocate(4).putInt(data.getLength()).array();
@@ -448,7 +456,11 @@ public class IOData {
 			//Copia array de bytes para array de bytes - (src, posSrc, dest, posDest, qtd)
 			System.arraycopy(off, 0, bytes, 1, 4);
 			System.arraycopy(len, 0, bytes, 5, 4);
-			System.arraycopy(data.getContent(), 0, bytes, 9, data.getContent().length);
+			
+			bytes[9] = hasContent;
+			
+			if (data.getContent() != null)
+				System.arraycopy(data.getContent(), 0, bytes, 10, contentSize);
 			
 			ByteArrayOutputStream decoding = new ByteArrayOutputStream();
 			
@@ -477,15 +489,21 @@ public class IOData {
 			
 			ByteBuffer offWrapper = ByteBuffer.wrap(off);
 			ByteBuffer lenWrapper = ByteBuffer.wrap(len);
-			
-			byte[] cont = new byte[lenWrapper.getInt()];
-			System.arraycopy(bytes, 9, cont, 0, lenWrapper.getInt());
-//			System.arraycopy(bytes, 9, cont, 0, (bytes.length - 9));
+			//este é a qtd. de bytes necessária para deslocar na hora de ler o nome do arquivo.
+			int size = 10;
+			//verifica se está passando o conteúdo ou se está pedindo um pedaço
+			boolean isContent = (bytes[9] == 0 ) ? false : true;
+			byte[] cont = null;
+			if (isContent){
+				cont = new byte[lenWrapper.getInt()];
+				System.arraycopy(bytes, 10, cont, 0, lenWrapper.getInt());
+//				System.arraycopy(bytes, 10, cont, 0, (bytes.length - 9));
+				size += lenWrapper.getInt();
+			}
 			
 			String fileName = null;
 			try {
-				fileName = new String(bytes, (9 + lenWrapper.getInt()) 
-				,bytes.length - ( (9 + lenWrapper.getInt()) ),"UTF-8");
+				fileName = new String(bytes, size,bytes.length - size,"UTF-8");
 //				fileName = new String(bytes, (9 + (bytes.length - 9)) ,bytes.length - (9 + (bytes.length - 9)),"UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
