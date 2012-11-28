@@ -4,14 +4,14 @@ public class DataMusicTransfer extends DataType {
 	private int offset;
 	private int length;
 	private byte[] content = null; 
-	private String FileName;
+	private String fileName;
 	
-	public DataMusicTransfer(String FileName, int offset, int length){
+	public DataMusicTransfer(String fileName, int offset, int length){
 		OperationCode op = OperationCode.MUSICTRANSFER;
 		this.operations.add(op);
 		this.offset = offset;
 		this.length = length;
-		this.FileName = FileName;
+		this.fileName = fileName;
 	}
 	
 	public DataMusicTransfer(){
@@ -43,11 +43,11 @@ public class DataMusicTransfer extends DataType {
 	}
 
 	public String getFileName() {
-		return FileName;
+		return fileName;
 	}
 
 	public void setFileName(String fileName) {
-		FileName = fileName;
+		this.fileName = fileName;
 	}
 	
 	

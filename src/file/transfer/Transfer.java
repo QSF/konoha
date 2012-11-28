@@ -109,7 +109,7 @@ public class Transfer implements Runnable {
 	public void saveFile() throws IOException {    
 		FileOutputStream fos = null;
 	    try {
-			fos = new FileOutputStream(this.file.getName());	
+			fos = new FileOutputStream("arquivos/" + this.file.getName());	
 			fos.write(this.file.getContent());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

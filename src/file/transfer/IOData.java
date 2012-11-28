@@ -447,7 +447,7 @@ public class IOData {
 				hasContent = 1;
 			}
 			//Aloca quantidade de bytes necessários
-			byte[] bytes = new byte[1 + (4 * 1) + (4 * 1) + 1 + contentSize + data.getFileName().length()];
+			byte[] bytes = new byte[1 + (4 * 1) + (4 * 1) + 1 + contentSize];
 			//Converte os int em um array de bytes		
 			byte[] off = ByteBuffer.allocate(4).putInt(data.getOffset()).array();
 			byte[] len = ByteBuffer.allocate(4).putInt(data.getLength()).array();
