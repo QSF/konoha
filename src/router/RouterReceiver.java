@@ -148,6 +148,7 @@ public class RouterReceiver implements Runnable {
 		
 		
 		if (Registry.getInstance().getP2pApplication().hasFile(data.getFileName())){
+			System.out.println("Tenho o arquivo: " + data.getFileName());
 			DataAnswer dataType = new DataAnswer();
 			dataType.getOperations().add(OperationCode.ANSWER);
 			
