@@ -75,7 +75,8 @@ public class TransferSender implements Runnable {
 			ArrayList<DataType> dataList = this.receive();
 			DataMusicTransfer data = (DataMusicTransfer) dataList.get(0);
 			
-			File file = new File(data.getFileName());
+			System.out.println("Nome do arquivo" + data.getFileName());
+			File file = new File("arquivos/" + data.getFileName());
 			FileInputStream fis;
 			try {
 				fis = new FileInputStream(file);
