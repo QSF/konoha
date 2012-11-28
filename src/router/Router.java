@@ -84,10 +84,11 @@ public class Router {
 		}
 	}
 	
-	public void search(Peer peer, DataType data) {
+	public RouterSender search(Peer peer, DataType data) {
 		RouterSender sender = new RouterSender(peer, this.config.getPort(),data);
 		Thread thread = new Thread(sender);
 		thread.start();
+		return sender;
 	}
 	
 	synchronized public void addPeers(ArrayList<Peer> peers){

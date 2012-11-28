@@ -480,13 +480,15 @@ public class IOData {
 			ByteBuffer lenWrapper = ByteBuffer.wrap(len);
 			
 			byte[] cont = new byte[lenWrapper.getInt()];
+//			System.arraycopy(bytes, 9, cont, 0, lenWrapper.getInt());
 			System.arraycopy(bytes, 9, cont, 0, (bytes.length - 9));
 			
 			String fileName = null;
 			try {
+//				fileName = new String(bytes, (9 + lenWrapper.getInt()) 
+//				,bytes.length - ( (9 + lenWrapper.getInt()) ),"UTF-8");
 				fileName = new String(bytes, (9 + (bytes.length - 9)) ,bytes.length - (9 + (bytes.length - 9)),"UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

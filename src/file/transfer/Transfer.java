@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import router.Peer;
+import router.RouterReceiver;
+import router.RouterSender;
 import application.DataFile;
 import application.Registry;
 
@@ -24,6 +26,8 @@ public class Transfer implements Runnable {
 	
 	/**Lista de peers que possuem o arquivos*/
 	private DataFile file;
+	
+	private int senderNumber;
 
 	public Transfer(String fileName){
 		this.file = new DataFile();
@@ -39,11 +43,19 @@ public class Transfer implements Runnable {
 	protected void calculatePing(){
 		DataType data = new DataType();
 		data.getOperations().add(OperationCode.ISALIVE);
+		//para cada peer.
+		//crie um thread para conectar com o peer e calcular o ping.
+		this.senderNumber = this.peers.size();
 		for (Peer peer: this.peers){
 			Registry.getInstance().getRouter().search(peer, data);
 		}
-		//para cada peer.
-		//crie um thread para conectar com o peer e calcular o ping.
+		boolean finishedPing = false;
+		while (!finishedPing){
+			for (Peer peer: this.peers){
+				if (peer.getPing() != -1.0)
+					finishedPing = true;
+			}
+		}
 	}
 	
 	@Override
@@ -52,10 +64,12 @@ public class Transfer implements Runnable {
 		long initial = System.currentTimeMillis()/1000;
 		//espera 5 sec
 		while (System.currentTimeMillis()/1000 - initial < 5){}
+		
+		this.calculatePing();
+		
 		for (Peer peer : this.peers){
-			System.out.println("O peer " + peer.getIp() + " tem o arquivo.");
+			System.out.println("O peer " + peer.getIp() + " tem o ping: " + peer.getPing());
 		}
-//		this.calculatePing();
 //		this.decision();
 //		
 //		int offset = 0;
@@ -111,7 +125,7 @@ public class Transfer implements Runnable {
 		//Calculando a porcentagem que cada ping de cada peer representa
 		//Falta arrumar quando a porcentagem sai "quebrada"
 		for (Peer p : this.peers) {
-			p.setPercent(((p.getPing() * 100) / sum));
+			p.setPercent((int) ((p.getPing() * 100) / sum));
 		}
 		
 		//Bubble sort
@@ -165,7 +179,7 @@ public class Transfer implements Runnable {
 			this.peers.add(peer);
 	}
 	
-	synchronized public void setPeer(Peer peer){
+	synchronized public void setPing(Peer peer){
 		for (int i = 0; i < this.peers.size(); i++){
 			Peer oldPeer = this.peers.get(i);
 			if ( oldPeer.getIp().equals(peer.getIp()) ){
@@ -179,7 +193,11 @@ public class Transfer implements Runnable {
 		this.receivers.remove(receiver);
 	}
 	
-	/**Getters e setters*/
+	public synchronized void removeSender(){
+		this.senderNumber--;
+	}
+	
+	/**Getters e setters*/	
 	public ArrayList<Receiver> getReceivers() {
 		return receivers;
 	}
@@ -202,6 +220,14 @@ public class Transfer implements Runnable {
 
 	public void setFile(DataFile file) {
 		this.file = file;
+	}
+	
+	public int getSenderNumber() {
+		return senderNumber;
+	}
+
+	public void setSenderNumber(int senderNumber) {
+		this.senderNumber = senderNumber;
 	}
 
 }

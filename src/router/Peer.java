@@ -9,7 +9,7 @@ import java.net.InetAddress;
 public class Peer {
 	private Inet4Address ip;
 	
-	private int ping;
+	private float ping = -1;
 	
 	private int percent;
 	
@@ -22,11 +22,11 @@ public class Peer {
 		this.ip = (Inet4Address) inetAddress;
 	}
 
-	public int getPing() {
+	public float getPing() {
 		return ping;
 	}
 
-	public void setPing(int ping) {
+	public void setPing(float ping) {
 		this.ping = ping;
 	}
 

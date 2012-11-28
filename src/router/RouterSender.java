@@ -134,19 +134,20 @@ public class RouterSender implements Runnable{
 	 * Pergunta se um peer está vivo, calculando seu ping.
 	 * O set ping armazena o resultado.
 	 * */
-	public void ISALIVEAction(DataType data){
-		DataType dataType = new DataType();
-		dataType.getOperations().add(OperationCode.END);
-		
+	public void ISALIVEAction(DataType data){		
 		long initial = new Date().getTime();
-		this.send(dataType);
+		
+		this.send(data);
+		this.stream.receive();
 		
 		long finalTime = new Date().getTime();
 		
-		int ping = (int) (finalTime - initial);		
+		float ping = (float) (finalTime - initial);		
 		
 		this.peer.setPing(ping);		
-		Registry.getInstance().getP2pApplication().getTransfer().setPeer(this.peer);
+		System.out.println(peer.getIp() + " tem o ping: " + peer.getPing());
+		Registry.getInstance().getP2pApplication().getTransfer().setPing(this.peer);
+		Registry.getInstance().getP2pApplication().getTransfer().removeSender();
 		
 		//fecha o thread.
 		this.runCondition = false;
