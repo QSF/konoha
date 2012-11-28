@@ -85,6 +85,7 @@ public class P2PApplication {
 	 * há algúm arquivo com este nome. 
 	 * */
 	public boolean hasFile(String fileName) {
+		this.updateFileList();
 		boolean contains = false;
 		
 		for (DataFile file : this.files)

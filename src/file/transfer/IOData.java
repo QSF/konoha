@@ -236,8 +236,13 @@ public class IOData {
 			decoding.write(bytes[0]);
 
 			//FILE SIZE
-			Long size = data.getSize();
-			decoding.write(size.byteValue());
+			ByteBuffer bb = ByteBuffer.allocate(8);
+			bb.putLong(data.getSize());
+			try {
+				decoding.write(bb.array());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			try {
 				//FILE NAME
 				decoding.write(data.getFileName().getBytes("UTF-8"));
