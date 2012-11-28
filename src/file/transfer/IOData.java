@@ -411,7 +411,8 @@ public class IOData {
 				e.printStackTrace();
 			}
 			data.setFileName(fileName);
-			
+			ByteBuffer buffer = ByteBuffer.wrap(size);
+			data.setSize(buffer.getLong());
 			return data;			
 		}
 		
