@@ -192,7 +192,6 @@ public class IOData {
 				byte[] addr = data.getPeer().getIp().getAddress();
 				decoding.write(addr);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			try {
@@ -430,10 +429,10 @@ public class IOData {
 		}
 		
 		
-		/** M�todo espec�fico que converte um DataMusicTransfer
+		/** Método específico que converte um DataMusicTransfer
 		 * em um array de bytes
 		 **/
-		public byte[] MUSICTRANSFERtoBytes(DataMusicTransfer data) {
+		public byte[] MUSICTRANSFERToBytes(DataMusicTransfer data) {
 			/*
 			 * OPERATION CODE(1) + OFFSET(4) + LENGTH(4) + CONTENT + FILE NAME
 			 * Onde offset representa qual o byte inicial,
@@ -465,7 +464,7 @@ public class IOData {
 		}
 		
 		/**
-		 * M�todo que converte um array de bytes em um DataMusicTransfer
+		 * Método que converte um array de bytes em um DataMusicTransfer
 		 **/
 		public DataMusicTransfer bytesToMUSICTRANSFER(byte[] bytes) {
 			DataMusicTransfer data = new DataMusicTransfer();
@@ -480,14 +479,14 @@ public class IOData {
 			ByteBuffer lenWrapper = ByteBuffer.wrap(len);
 			
 			byte[] cont = new byte[lenWrapper.getInt()];
-//			System.arraycopy(bytes, 9, cont, 0, lenWrapper.getInt());
-			System.arraycopy(bytes, 9, cont, 0, (bytes.length - 9));
+			System.arraycopy(bytes, 9, cont, 0, lenWrapper.getInt());
+//			System.arraycopy(bytes, 9, cont, 0, (bytes.length - 9));
 			
 			String fileName = null;
 			try {
-//				fileName = new String(bytes, (9 + lenWrapper.getInt()) 
-//				,bytes.length - ( (9 + lenWrapper.getInt()) ),"UTF-8");
-				fileName = new String(bytes, (9 + (bytes.length - 9)) ,bytes.length - (9 + (bytes.length - 9)),"UTF-8");
+				fileName = new String(bytes, (9 + lenWrapper.getInt()) 
+				,bytes.length - ( (9 + lenWrapper.getInt()) ),"UTF-8");
+//				fileName = new String(bytes, (9 + (bytes.length - 9)) ,bytes.length - (9 + (bytes.length - 9)),"UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}

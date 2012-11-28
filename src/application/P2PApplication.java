@@ -35,10 +35,8 @@ public class P2PApplication {
 	private TransferConfig transferConfig = new TransferConfig();
 	
 	public P2PApplication() {
-		int port = this.transferConfig.getPort();
-		int numberConnections = this.transferConfig.getConnections();
 		//este sender recebe pedido de transferência de arquivos.
-		this.setSender(new Sender(port, numberConnections));
+		this.initSender();
 		
 		this.myPeer = new Peer();
 		try {
@@ -46,6 +44,15 @@ public class P2PApplication {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void initSender(){
+		int port = this.transferConfig.getPort();
+		int numberConnections = this.transferConfig.getConnections();
+		Sender sender = new Sender(port, numberConnections);
+		this.setSender(sender);
+		Thread  thread = new Thread(sender);
+		thread.start();
 	}
 	
 	public void connect(String initialIp) {
