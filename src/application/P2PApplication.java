@@ -55,13 +55,13 @@ public class P2PApplication {
 	
 	public void initTransfer(String fileName){
 		Router router = Registry.getInstance().getRouter();
-		
-//		this.transfer = new Transfer(fileName);
-//		Thread thread = new Thread(this.transfer);
-//		thread.start();
+		fileName = fileName + ".mp3";
+		this.transfer = new Transfer(fileName);
+		Thread thread = new Thread(this.transfer);
+		thread.start();
 		this.updateFileList();
 		
-		router.searchFile(fileName + ".mp3",this.myPeer);
+		router.searchFile(fileName,this.myPeer);
 	}
 	
 	public void updateFileList(){
@@ -84,7 +84,7 @@ public class P2PApplication {
 	 * Método que pesquisa se no diretório de arquivos
 	 * há algúm arquivo com este nome. 
 	 * */
-	public boolean hasFile(String fileName) {
+	public synchronized boolean hasFile(String fileName) {
 		this.updateFileList();
 		boolean contains = false;
 		

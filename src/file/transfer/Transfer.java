@@ -49,29 +49,35 @@ public class Transfer implements Runnable {
 	@Override
 	public void run() {
 		//esperar um tempo
-		this.calculatePing();
-		this.decision();
-		
-		int offset = 0;
-		int length = 0;
-		for (Peer peer: peers){
-			length = (int) ((peer.getPercent() * this.file.getSize()) / 100);
-			
-			Receiver receiver = new Receiver(this, 12346, peer, offset, length);
-			this.receivers.add(receiver);
-			Thread thread = new Thread(receiver);
-			thread.start();
-			
-			offset = offset + length;
+		long initial = System.currentTimeMillis()/1000;
+		//espera 5 sec
+		while (System.currentTimeMillis()/1000 - initial < 5){}
+		for (Peer peer : this.peers){
+			System.out.println("O peer " + peer.getIp() + " tem o arquivo.");
 		}
-		
-		while (!this.receivers.isEmpty()){};
-		//depois que transferiu todas as partes, salva.
-		try {
-			this.saveFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		this.calculatePing();
+//		this.decision();
+//		
+//		int offset = 0;
+//		int length = 0;
+//		for (Peer peer: peers){
+//			length = (int) ((peer.getPercent() * this.file.getSize()) / 100);
+//			
+//			Receiver receiver = new Receiver(this, 12346, peer, offset, length);
+//			this.receivers.add(receiver);
+//			Thread thread = new Thread(receiver);
+//			thread.start();
+//			
+//			offset = offset + length;
+//		}
+//		
+//		while (!this.receivers.isEmpty()){};
+//		//depois que transferiu todas as partes, salva.
+//		try {
+//			this.saveFile();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 

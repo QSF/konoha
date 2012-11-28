@@ -96,7 +96,7 @@ public class RouterReceiver implements Runnable {
 			}
 		}	
 		this.closeConnection();
-		Registry.getInstance().getRouter().getRouterListener().removeReiver(this);
+		Registry.getInstance().getRouter().getRouterListener().removeReceiver(this);
 	}
 	
 	/**
@@ -186,8 +186,12 @@ public class RouterReceiver implements Runnable {
 		System.out.println("Possui o arquivo " + data.getFileName());
 		System.out.println("Com o tamanho " + data.getSize());
 		
+		//fecha o thread.
+		this.runCondition = false;
+		
 		DataFile file = Registry.getInstance().getP2pApplication().getTransfer()
 			.getFile();
+		
 		//checa o arquivo.
 		if (! file.getName().equals(data.getFileName()) ){
 			//o transfer atual deverá ser igual ao arquivo que este peer irá receber.
@@ -201,9 +205,6 @@ public class RouterReceiver implements Runnable {
 		Registry.getInstance().getP2pApplication().getTransfer().addPeer(this.peer);
 		//tenta adicionar na lista de vizinhos.
 		Registry.getInstance().getRouter().addPeer(this.peer);
-		
-		//fecha o thread.
-		this.runCondition = false;
 	}
 	
 	public void ENDAction(DataType data){		
