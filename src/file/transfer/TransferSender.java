@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,8 +16,10 @@ public class TransferSender implements Runnable {
 	private IOData stream;
 	private Socket connection;
 	private boolean runCondition;
+	private Sender sender;
 	
-	public TransferSender(Socket connection){
+	public TransferSender(Socket connection, Sender sender){
+		this.sender = sender;
 		this.connection = connection;
 		this.createStreams();
 		
@@ -61,8 +62,6 @@ public class TransferSender implements Runnable {
 		try {
 			this.stream.close();
 			this.connection.close();
-//			 Registry.getInstance().getServerListerner()
-//			 	.removeReceiverConnection(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -76,7 +75,7 @@ public class TransferSender implements Runnable {
 			ArrayList<DataType> dataList = this.receive();
 			DataMusicTransfer data = (DataMusicTransfer) dataList.get(0);
 			
-			File file = new File(data.getFileName() + ".mp3");
+			File file = new File(data.getFileName());
 			FileInputStream fis;
 			try {
 				fis = new FileInputStream(file);
@@ -84,11 +83,11 @@ public class TransferSender implements Runnable {
 				fis.read(bytes, data.getOffset(), data.getLength());
 				data.setContent(bytes);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			this.send(data);
 		}	
 		this.closeConnection();
+		this.sender.remove(this);
 	}
 }

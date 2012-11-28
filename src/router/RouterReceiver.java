@@ -96,6 +96,7 @@ public class RouterReceiver implements Runnable {
 			}
 		}	
 		this.closeConnection();
+		Registry.getInstance().getRouter().getRouterListener().removeReiver(this);
 	}
 	
 	/**

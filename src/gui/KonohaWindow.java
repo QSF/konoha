@@ -14,7 +14,7 @@ public class KonohaWindow extends JFrame {
 	private static final long serialVersionUID = -1007887547250584131L;
 	
 	public final static int WIDTH = 500;
-	public final static int HEIGHT = 400;
+	public final static int HEIGHT = 450;
 	
 	private HeaderPanel headerPanel;
 	private InputPanel inputPanel;
@@ -37,6 +37,7 @@ public class KonohaWindow extends JFrame {
 		
 		//adiciona o listener do evento.
 		this.getInputPanel().getSearchButton().addActionListener(new SearchListener());
+		this.getInputPanel().getConnectButton().addActionListener(new ConnectListener());
 		
 		this.getHeaderPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getInputPanel().setAlignmentX(Component.LEFT_ALIGNMENT);

@@ -32,7 +32,7 @@ public class HeaderPanel extends JPanel {
 	private JLabel slogan;
 	
 	public HeaderPanel(){
-		this.init("Use Kohana, don't be an aho!");
+		this.init("Use Konoha, don't be an aho!");
 	}
 	
 	/**

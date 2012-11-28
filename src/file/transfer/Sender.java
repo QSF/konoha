@@ -5,8 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import router.RouterReceiver;
-
 /**
  * Thread que escuta os pedidos de transferência de partes de 
  * um arquivo.
@@ -61,10 +59,14 @@ public class Sender implements Runnable {
 		
 		while(this.runCondition) {
 			this.connect();
-			TransferSender sender = new TransferSender(this.connection);
+			TransferSender sender = new TransferSender(this.connection, this);
 			this.senders.add(sender);
 			Thread thread = new Thread(sender);
 			thread.start();
 		}	
+	}
+	
+	public synchronized void remove(TransferSender transfer){
+		this.senders.remove(transfer);
 	}
 }

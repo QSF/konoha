@@ -66,4 +66,8 @@ public class RouterListener implements Runnable {
 		}	
 	}
 	
+	public synchronized void removeReiver(RouterReceiver receiver) {
+		this.receivers.remove(receiver);
+	}
+	
 }

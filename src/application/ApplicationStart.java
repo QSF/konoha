@@ -1,6 +1,7 @@
 package application;
 
 import gui.KonohaWindow;
+import gui.NeighborsWindow;
 import router.Router;
 
 public class ApplicationStart {
@@ -15,6 +16,9 @@ public class ApplicationStart {
 		
 		KonohaWindow window = new KonohaWindow();
 		Registry.getInstance().setWindow(window);
+		
+		NeighborsWindow neighborsWindow = new NeighborsWindow();
+		Registry.getInstance().setNeighborsWindow(neighborsWindow);
 	}
 
 }

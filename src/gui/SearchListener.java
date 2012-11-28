@@ -11,13 +11,11 @@ public class SearchListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		JTextField ipField = Registry.getInstance().getWindow().getInputPanel().getIpInput().getField();
 		JTextField fileField = Registry.getInstance().getWindow().getInputPanel().getMusicInput().getField();
-		
-		String initialIp = ipField.getText();
+
 		String fileName = fileField.getText();
 		
-		Registry.getInstance().getP2pApplication().initTransfer(fileName,initialIp);
+		Registry.getInstance().getP2pApplication().initTransfer(fileName);
 	}
 
 }

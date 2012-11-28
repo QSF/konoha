@@ -39,27 +39,29 @@ public class P2PApplication {
 		}
 	}
 	
-	public void initTransfer(String fileName,String initialIp){
-//		Router router = Registry.getInstance().getRouter();
-		if (this.hasFile(fileName + ".mp3"))
-			System.out.println("Tem " + fileName);
-		else
-			System.out.println("N Tem " + fileName);
+	public void connect(String initialIp) {
+		Router router = Registry.getInstance().getRouter();
+		
 		Peer peer = new Peer();
 		try {
 			peer.setIp(Inet4Address.getByName(initialIp));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		//adiciona o peer inicial na lista de vizinhos.
+		router.addPeer(peer);
+		router.askNeighbors();
+	}
+	
+	public void initTransfer(String fileName){
+		Router router = Registry.getInstance().getRouter();
 		
-		ArrayList<Peer> peers = new ArrayList<>();
-		peers.add(peer);
-		
-		this.transfer = new Transfer(peers,fileName);
-		Thread thread = new Thread(this.transfer);
-		thread.start();
+//		this.transfer = new Transfer(fileName);
+//		Thread thread = new Thread(this.transfer);
+//		thread.start();
 		this.updateFileList();
-		//router.searchFile(fileName + ".mp3",this.myPeer);
+		
+		router.searchFile(fileName + ".mp3",this.myPeer);
 	}
 	
 	public void updateFileList(){

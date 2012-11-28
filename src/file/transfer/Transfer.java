@@ -3,7 +3,6 @@ package file.transfer;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -51,17 +50,27 @@ public class Transfer implements Runnable {
 	public void run() {
 		//esperar um tempo
 		this.calculatePing();
-		this.Decision();
+		this.decision();
 		
 		int offset = 0;
 		int length = 0;
 		for (Peer peer: peers){
 			length = (int) ((peer.getPercent() * this.file.getSize()) / 100);
 			
-			Thread thread = new Thread(new Receiver(this, 12346, peer, offset, length));
+			Receiver receiver = new Receiver(this, 12346, peer, offset, length);
+			this.receivers.add(receiver);
+			Thread thread = new Thread(receiver);
 			thread.start();
 			
 			offset = offset + length;
+		}
+		
+		while (!this.receivers.isEmpty()){};
+		//depois que transferiu todas as partes, salva.
+		try {
+			this.saveFile();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -87,7 +96,7 @@ public class Transfer implements Runnable {
 	 * menor o ping do peer, maior o tamanho do arquivo que ele irá enviar.
 	 * @return ArrayList<Peers>
 	 */
-	public ArrayList<Peer> Decision() {
+	public ArrayList<Peer> decision() {
 		int sum = 0;
 		//Obtendo a soma dos pings dos peers que possuem o arquivo
 		for (Peer p : this.peers) {
@@ -158,6 +167,10 @@ public class Transfer implements Runnable {
 				break;
 			}
 		}
+	}
+	
+	public synchronized void removeReceiver(Receiver receiver){
+		this.receivers.remove(receiver);
 	}
 	
 	/**Getters e setters*/

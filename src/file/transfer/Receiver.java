@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import router.Peer;
 
 /**
- * Thread que ficara respons�vel por receber um arquivo(ou peda�o dele),
+ * Thread que ficara responsível por receber um arquivo(ou pedaço dele),
  * recebendo de um determinado peer.
  * 
  * Irá realizar uma conexão com um peer, pedindo o arquivo.
@@ -45,15 +45,6 @@ public class Receiver implements Runnable {
 		this.setLength(length);
 		this.setPeer(peer);
 		this.setPort(port);
-		this.createStreams();
-		this.sendInfo();
-	}
-	
-	/**
-	 * Enviar as informações sobre o arquivo que está sendo requisitado.
-	 * */
-	protected void sendInfo(){
-		
 	}
 	
 	/**
@@ -100,18 +91,9 @@ public class Receiver implements Runnable {
 			this.stream.close();
 			this.getSocket().close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}	
-	
-	/**
-	 * Checa a integridade dos bytes recebidos.
-	 * */
-	private boolean checkFile(ArrayList<DataType> dataList) {
-		
-		return false;
-	}
 	
 	/**
 	 * M�todo que concatena as partes recebidas do arquivo 
@@ -135,6 +117,7 @@ public class Receiver implements Runnable {
 		System.arraycopy(data.getContent(), 0, this.transfer.getFile().getContent(), 
 						 data.getOffset(), data.getLength());
 		this.closeConnection();
+		this.getTransfer().removeReceiver(this);
 	}
 
 	public void connect() {

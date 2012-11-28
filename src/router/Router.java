@@ -49,9 +49,20 @@ public class Router {
 	 * Método que encontra os peers vizinhos,
 	 * dado um determinado peer.
 	 * */
-	public void findNeighbors(Peer peer){
-		//abri um socket.
-		
+	public void askNeighbors(){
+		for (Peer peer : this.peers)
+			this.askNeighbor(peer);		
+	}
+	
+	/**
+	 * Atualiza a lista de vizinhos de acordo com um peer.
+	 * */
+	public void askNeighbor(Peer peer){
+		DataType data = new DataType();
+		data.getOperations().add(OperationCode.ASKNEIGHBORS);
+		RouterSender sender = new RouterSender(peer, this.config.getPort(),data);
+		Thread thread = new Thread(sender);
+		thread.start();
 	}
 	
 	/**
@@ -74,17 +85,6 @@ public class Router {
 	}
 	
 	public void search(Peer peer, DataType data) {
-		RouterSender sender = new RouterSender(peer, this.config.getPort(),data);
-		Thread thread = new Thread(sender);
-		thread.start();
-	}
-	
-	/**
-	 * Atualiza a lista de vizinhos de acordo com um peer.
-	 * */
-	public void askNeighbors(Peer peer){
-		DataType data = new DataType();
-		data.getOperations().add(OperationCode.ASKNEIGHBORS);
 		RouterSender sender = new RouterSender(peer, this.config.getPort(),data);
 		Thread thread = new Thread(sender);
 		thread.start();

@@ -18,6 +18,9 @@ public class InputPanel extends JPanel {
 	
 	/**Input referente ao ip inicial*/
 	private JInput ipInput;
+	
+	private JButton connectButton;
+	
 	/**Input referente ao nome da música*/
 	private JInput musicInput;
 	
@@ -32,12 +35,14 @@ public class InputPanel extends JPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
 		this.setIpInput(new JInput("Digite o IP inicial"));
-		this.setMusicInput(new JInput("Digite o nome da música:"));
+		this.setConnectButton(new JButton("conectar nessa porra!"));
 		
+		this.setMusicInput(new JInput("Digite o nome da música:"));
 		this.setSearchButton(new JButton("buscar"));
 		//adicionar handler
 		
 		this.add(this.getIpInput());
+		this.add(this.getConnectButton());
 		this.add(this.getMusicInput());
 		this.add(this.getSearchButton());
 	}
@@ -66,5 +71,15 @@ public class InputPanel extends JPanel {
 
 	public void setSearchButton(JButton searchButton) {
 		this.searchButton = searchButton;
+	}
+
+
+	public JButton getConnectButton() {
+		return connectButton;
+	}
+
+
+	public void setConnectButton(JButton connectButton) {
+		this.connectButton = connectButton;
 	}
 }
