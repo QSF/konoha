@@ -456,7 +456,7 @@ public class IOData {
 			//Copia array de bytes para array de bytes - (src, posSrc, dest, posDest, qtd)
 			System.arraycopy(off, 0, bytes, 1, 4);
 			System.arraycopy(len, 0, bytes, 5, 4);
-			
+
 			bytes[9] = hasContent;
 			
 			if (data.getContent() != null)
