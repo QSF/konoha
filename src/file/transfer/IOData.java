@@ -493,12 +493,14 @@ public class IOData {
 			int size = 10;
 			//verifica se está passando o conteúdo ou se está pedindo um pedaço
 			boolean isContent = (bytes[9] == 0 ) ? false : true;
+			int length = lenWrapper.getInt();
+			int offset = offWrapper.getInt();
 			byte[] cont = null;
 			if (isContent){
-				cont = new byte[lenWrapper.getInt()];
-				System.arraycopy(bytes, 10, cont, 0, lenWrapper.getInt());
+				cont = new byte[length];
+				System.arraycopy(bytes, 10, cont, 0, length);
 //				System.arraycopy(bytes, 10, cont, 0, (bytes.length - 9));
-				size += lenWrapper.getInt();
+				size += length;
 			}
 			
 			String fileName = null;
@@ -510,8 +512,8 @@ public class IOData {
 			}
 			
 			data.getOperations().add(OperationCode.byteToEnum(bytes[0])); 
-			data.setOffset(offWrapper.getInt());
-			data.setLength(lenWrapper.getInt());
+			data.setOffset(offset);
+			data.setLength(length);
 			data.setContent(cont);
 			data.setFileName(fileName);
 			return data;

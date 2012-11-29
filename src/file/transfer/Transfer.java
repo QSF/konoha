@@ -69,10 +69,11 @@ public class Transfer implements Runnable {
 		
 		this.calculatePing();
 		this.decision();
-		
+
 		for (Peer peer : this.peers){
 			System.out.println("O peer " + peer.getIp() + " tem o %: " + peer.getPercent());
 		}
+		this.file.setContent(new byte[(int) this.file.getSize()]);
 		int port = this.transferConfig.getPort();
 		int offset = 0;
 		int length = 0;
@@ -93,7 +94,7 @@ public class Transfer implements Runnable {
 //		while (!this.receivers.isEmpty()){};
 		initial = System.currentTimeMillis()/1000;
 		//espera 5 sec, tempo máximo para esperar um peer.
-		while (System.currentTimeMillis()/1000 - initial < 5){}
+		while (System.currentTimeMillis()/1000 - initial < 10){}
 		//depois que transferiu todas as partes, salva.
 		try {
 			this.saveFile();

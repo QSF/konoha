@@ -1,10 +1,12 @@
 package file.transfer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import router.Peer;
@@ -107,15 +109,10 @@ public class Receiver implements Runnable {
 		this.send(askData);
 		ArrayList<DataType> dataList = this.receive();
 		
-		/* if (this.checkFile(dataList)){
-			checa a integridade
-			adiciona os bytes para o arquivo.
-			Registry.getInstance().getTransfer().setBytesToFile(this.getOffset(), this.getLength(),dataList);
-		} */
-		
 		DataMusicTransfer data = (DataMusicTransfer) dataList.get(0);
+		
 		System.arraycopy(data.getContent(), 0, this.transfer.getFile().getContent(), 
-						 data.getOffset(), data.getLength());
+						 this.offset, this.length);
 		this.closeConnection();
 		this.getTransfer().removeReceiver(this);
 	}
