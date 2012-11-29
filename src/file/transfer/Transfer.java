@@ -70,9 +70,6 @@ public class Transfer implements Runnable {
 		this.calculatePing();
 		this.decision();
 
-		for (Peer peer : this.peers){
-			System.out.println("O peer " + peer.getIp() + " tem o %: " + peer.getPercent());
-		}
 		this.file.setContent(new byte[(int) this.file.getSize()]);
 		int port = this.transferConfig.getPort();
 		int offset = 0;
@@ -80,9 +77,8 @@ public class Transfer implements Runnable {
 		for (Peer peer: peers){
 			length = (int) ((peer.getPercent() * this.file.getSize()) / 100);
 			
-			System.out.println("Tamno do arquivo: " + this.file.getSize());
 			System.out.println("O peer " + peer.getIp() + " tem o %: " + peer.getPercent());
-			System.out.println("Que são " + length + " bytes do total.");
+			System.out.println("Que são " + length + " bytes de " + this.file.getSize());
 			Receiver receiver = new Receiver(this, port, peer, offset, length);
 			this.receivers.add(receiver);
 			Thread thread = new Thread(receiver);
@@ -91,11 +87,10 @@ public class Transfer implements Runnable {
 			offset = offset + length;
 		}
 		
-//		while (!this.receivers.isEmpty()){};
-		initial = System.currentTimeMillis()/1000;
-		//espera 5 sec, tempo máximo para esperar um peer.
-		while (System.currentTimeMillis()/1000 - initial < 10){}
-		//depois que transferiu todas as partes, salva.
+		while (!this.receivers.isEmpty()){};
+//		initial = System.currentTimeMillis()/1000;
+//		while (System.currentTimeMillis()/1000 - initial < 10){}
+//		//depois que transferiu todas as partes, salva.
 		try {
 			this.saveFile();
 		} catch (IOException e) {

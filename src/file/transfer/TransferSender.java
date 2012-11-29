@@ -69,25 +69,21 @@ public class TransferSender implements Runnable {
 
 	@Override
 	public void run(){
-		this.runCondition = true;
+		ArrayList<DataType> dataList = this.receive();
+		DataMusicTransfer data = (DataMusicTransfer) dataList.get(0);
 		
-		while(this.runCondition){
-			ArrayList<DataType> dataList = this.receive();
-			DataMusicTransfer data = (DataMusicTransfer) dataList.get(0);
-			
-			System.out.println("Nome do arquivo" + data.getFileName());
-			File file = new File("arquivos/" + data.getFileName());
-			FileInputStream fis;
-			try {
-				fis = new FileInputStream(file);
-				byte[] bytes = new byte[data.getLength()];
-				fis.read(bytes, data.getOffset(), data.getLength());
-				data.setContent(bytes);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			this.send(data);
-		}	
+		File file = new File("arquivos/" + data.getFileName());
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(file);
+			byte[] bytes = new byte[data.getLength()];
+			fis.read(bytes, data.getOffset(), data.getLength());
+			data.setContent(bytes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		this.send(data);
 		this.closeConnection();
 		this.sender.remove(this);
 	}
