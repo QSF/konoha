@@ -4,7 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import router.Peer;
 import application.DataFile;
@@ -143,13 +145,13 @@ public class Transfer implements Runnable {
 	    }
 	    
 	    //Reorganizando as porcentagens
-	    i = 0; j = this.peers.size() - 1; int temp = 0;
-	    while (i != j) {
-	    	temp = this.peers.get(i).getPercent();
-	    	this.peers.get(i).setPercent(this.peers.get(j).getPercent());
-	    	this.peers.get(j).setPercent(temp);
-	    	i++;
-	    	j--;
+	    List<Integer> percents = new ArrayList<Integer>();
+	    for (i =0; i < this.peers.size(); i++){
+	    	percents.add(this.peers.get(i).getPercent());
+	    }
+	    Collections.reverse(percents);
+	    for (i =0; i < this.peers.size(); i++){
+	    	this.peers.get(i).setPercent(percents.get(i));
 	    }
 	    
 	    //Soma das porcentagens para "arrendondar" o resultado
