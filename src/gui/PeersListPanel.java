@@ -87,7 +87,7 @@ public class PeersListPanel extends JPanel {
 			return;
 		}
 		
-		this.peers.remove(index);
+		this.peers.remove(index  + 1);//por causa do header
 		this.jPeers.remove(index);
 		
 		this.list.setListData(this.peers);
@@ -97,10 +97,9 @@ public class PeersListPanel extends JPanel {
 	 * Limpa a lista de peers.
 	 * */
 	public void clear(){
-		this.peers.clear();
-		this.jPeers.clear();
-		
-		this.list.setListData(this.peers);
-		this.initHeader(this.header);
+		ArrayList<Peer> aux = (ArrayList<Peer>) this.jPeers.clone();
+		for (Peer p : aux){
+			this.removePeer(p);
+		}
 	}
 }

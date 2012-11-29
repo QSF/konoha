@@ -44,6 +44,17 @@ public class Router {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		
+		this.initTimer();
+	}
+	
+	/**
+	 * Inicializa a thread que vai ficar atualizando a tabela.
+	 * */
+	protected void initTimer() {
+		TimerRouter timer = new TimerRouter();
+		Thread thread = new Thread(timer);
+		thread.start();
 	}
 	
 	/**

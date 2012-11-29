@@ -2,14 +2,11 @@ package file.transfer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-
-import javax.crypto.spec.PSource;
 
 import router.Peer;
 
@@ -37,7 +34,7 @@ public class Receiver implements Runnable {
 	/** Quantidade de bytes que será lido do arquivo */
 	private int length;
 	
-	/** Transfer que ser� usado no m�todo run, que juntar� as partes do arquivo **/
+	/** Transfer que será usado no método run, que juntar as partes do arquivo **/
 	private Transfer transfer;
 	
 	/** Porta usanda para conexão*/
@@ -127,7 +124,8 @@ public class Receiver implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Leu os bytes do peer " + this.peer.getIp());
+		System.out.println(this.transfer.getFile().getName() + ":Leu de " + this.getOffset() + 
+				" a " + this.getLength() + " do peer " + this.peer.getIp());
 		//concatena
 		System.arraycopy(bytes, 0, this.transfer.getFile().getContent(), 
 				this.offset, this.length);

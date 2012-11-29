@@ -64,14 +64,25 @@ public class Transfer implements Runnable {
 	
 	@Override
 	public void run() {
+		Registry.getInstance().getWindow().setMessages("Aguarde");
 		//esperar um tempo
 		long initial = System.currentTimeMillis()/1000;
 		//espera 5 sec, tempo máximo para esperar um peer.
 		while (System.currentTimeMillis()/1000 - initial < 5){}
 		
+		if (this.peers.isEmpty()){
+			//se estiver vazio, ngm tem o arquivos
+			String msg = "O arquivo " + this.file.getName() + " não foi encontrado.";
+			System.out.println(msg);
+			Registry.getInstance().getWindow().setMessages(msg);
+			return;
+		}
+			
+		
 		this.calculatePing();
 		this.decision();
-
+		this.updateGui();
+		//atualizar a lista.
 		
 		int[] length = new int[this.peers.size()];
 		int sum = 0;
@@ -88,29 +99,31 @@ public class Transfer implements Runnable {
 		int port = this.transferConfig.getPort();
 		int offset = 0;
 		i = 0;
-		for (Peer peer: peers){			
-			System.out.println("O peer " + peer.getIp() + " tem o %: " + peer.getPercent());
-			System.out.println("Que são " + length[i] + " bytes de " + this.file.getSize());
-			System.out.println("offset e length: " +offset + " " + length[i] + " de " + peer.getIp());
-			Receiver receiver = new Receiver(this, port, peer, offset, length[i]);
-			this.receivers.add(receiver);
-			Thread thread = new Thread(receiver);
-			thread.start();
-			
-			offset = offset + length[i];
-			i++;
+		for (Peer peer: peers){
+			if (peer.getPing() != -1){//conferir se o peer não chegou depois.
+				System.out.println("O peer " + peer.getIp() + " tem o %: " + peer.getPercent());
+				System.out.println("Que são " + length[i] + " bytes de " + this.file.getSize());
+				System.out.println("offset e length: " +offset + " " + length[i] + " de " + peer.getIp());
+				Receiver receiver = new Receiver(this, port, peer, offset, length[i]);
+				this.receivers.add(receiver);
+				Thread thread = new Thread(receiver);
+				thread.start();
+				
+				offset = offset + length[i];
+				i++;
+			}
 		}
-		
-//		while (!this.receivers.isEmpty()){};
-		
+		Registry.getInstance().getWindow().setMessages("Transferência em andamento.");
 		initial = System.currentTimeMillis()/1000;
 		while (System.currentTimeMillis()/1000 - initial < 10){}
-		System.out.println("Vai tentar escrever no arquivo.");
 		//depois que transferiu todas as partes, salva.
 		try {
 			this.saveFile();
-			System.out.println("Escrito.");
+			System.out.println("Escreveu o arquivo " + this.file.getName() + " no disco");
+			Registry.getInstance().getWindow().setMessages("Arquivo " + this.file.getName() + " foi baixado");
 		} catch (IOException e) {
+			System.out.println("Erro ao escrever o arquivo");
+			Registry.getInstance().getWindow().setMessages("Erro ao escrever baixar arquivo");
 			e.printStackTrace();
 		}
 	}
@@ -175,16 +188,18 @@ public class Transfer implements Runnable {
 		for (Peer p : this.peers) {
 			sum += p.getPercent();
 		}
-		
+
 		this.peers.get(0).setPercent((this.peers.get(0).getPercent() + (100 - sum)));
 		return this.peers;
 	}
 
-	/**
-	 * Método que encerra uma tranferência.
-	 * */
-	public void close(){
-
+	protected void updateGui() {
+		Registry.getInstance().getWindow().getPeersPanel().getPeersListPanel().clear();
+		for (Peer peer : this.peers){
+			if (peer.getPing() != -1)//apenas quem está "valendo"
+				Registry.getInstance().getWindow().getPeersPanel().getPeersListPanel().addPeer(peer);
+		}
+		
 	}
 	
 	synchronized public void addPeer(Peer peer){

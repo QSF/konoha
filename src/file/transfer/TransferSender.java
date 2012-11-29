@@ -87,7 +87,9 @@ public class TransferSender implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Enviou "+ data.getLength() + " bytes para o peer: " + this.peer.getIp());
+		System.out.println("Enviou para o peer " + this.peer.getIp() + 
+				", de " + data.getOffset() + " a " +(data.getOffset()+ data.getLength()) + 
+				" do aquivo " + data.getFileName());
 		this.closeConnection();
 		this.sender.remove(this);
 	}

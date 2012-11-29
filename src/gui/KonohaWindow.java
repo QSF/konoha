@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /**
  * Janela principal do konaha.
@@ -19,6 +20,7 @@ public class KonohaWindow extends JFrame {
 	private HeaderPanel headerPanel;
 	private InputPanel inputPanel;
 	private PeersPanel peersPanel;
+	private JLabel messages;
 	
 	public KonohaWindow(){
 		this.init();
@@ -34,6 +36,7 @@ public class KonohaWindow extends JFrame {
 		this.setHeaderPanel(new HeaderPanel());
 		this.setInputPanel(new InputPanel());
 		this.setPeersPanel(new PeersPanel());
+		this.setMessages("Informe um arquivo.");
 		
 		//adiciona o listener do evento.
 		this.getInputPanel().getSearchButton().addActionListener(new SearchListener());
@@ -42,10 +45,12 @@ public class KonohaWindow extends JFrame {
 		this.getHeaderPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getInputPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getPeersPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+		this.getMessages().setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		this.add(this.getHeaderPanel());
 		this.add(this.getInputPanel());
 		this.add(this.getPeersPanel());
+		this.add(this.getMessages());
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
@@ -76,6 +81,20 @@ public class KonohaWindow extends JFrame {
 
 	public void setPeersPanel(PeersPanel peersPanel) {
 		this.peersPanel = peersPanel;
+	}
+
+	public JLabel getMessages() {
+		return messages;
+	}
+
+	public void setMessages(JLabel messages) {
+		this.messages = messages;
+	}
+	
+	public void setMessages(String messages) {
+		if (this.messages == null)
+			this.messages = new JLabel();
+		this.messages.setText(messages);
 	}
 	
 }
