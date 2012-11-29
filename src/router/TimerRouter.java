@@ -18,7 +18,7 @@ public class TimerRouter implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			//envia um end para cada peer, pedindo seus vizinhos.
+			//Pede a lista de vizinhos para cada vizinho.
 			Registry.getInstance().getRouter().askNeighbors();
 //			ArrayList<Peer> peers = (ArrayList<Peer>) Registry.getInstance().getRouter().getPeers().clone();
 //			for (Peer peer : peers){

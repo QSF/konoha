@@ -123,6 +123,7 @@ public class Router {
 		}
 		
 		if (!contains){
+			System.out.println("Adicionando vizinho " + peer.getIp());
 			this.peers.add(peer);
 			Registry.getInstance().getNeighborsWindow().getPeersListPanel().addPeer(peer);
 		}
@@ -141,6 +142,7 @@ public class Router {
 		}
 		
 		if (contains){
+			System.out.println("Removendo vizinho " + peer.getIp());
 			this.peers.remove(i);
 			Registry.getInstance().getNeighborsWindow().getPeersListPanel().removePeer(peer);
 		}

@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import router.Peer;
@@ -40,6 +39,8 @@ public class Receiver implements Runnable {
 	/** Porta usanda para conexão*/
 	private int port;
 	
+	private boolean abort = false;
+	
 	public Receiver(Transfer transfer, int port, Peer peer, int offset, int length) {
 		this.transfer = transfer;
 		this.setOffset(offset);
@@ -58,6 +59,9 @@ public class Receiver implements Runnable {
 			output.flush();
 			this.stream = new IOData(new DataInputStream (this.getSocket().getInputStream()), output);
 		} catch (IOException e) {
+			this.transfer.setAbort(true);
+			System.out.println("Problema ao receber dados do peer" + this.peer.getIp());
+			this.abort = true;
 			e.printStackTrace();
 		}
 	}
@@ -103,6 +107,8 @@ public class Receiver implements Runnable {
 	public void run() {
 		this.connect();
 		this.createStreams();
+		if (abort)
+			return;
 		//envia os dados sobre o pedaço solicitado.
 		DataMusicTransfer askData = new DataMusicTransfer(
 				this.transfer.getFile().getName(), this.offset,this.length);
@@ -122,6 +128,8 @@ public class Receiver implements Runnable {
 	            position += count;
 	        }//le todos os bytes
 		} catch (IOException e) {
+			this.transfer.setAbort(true);
+			System.out.println("Problema ao receber dados do peer" + this.peer.getIp());
 			e.printStackTrace();
 		}
 		System.out.println(this.transfer.getFile().getName() + ":Leu de " + this.getOffset() + 
@@ -134,7 +142,10 @@ public class Receiver implements Runnable {
 		try {
 			is.close();
 		} catch (IOException e) {
+			this.transfer.setAbort(true);
+			System.out.println("Problema ao receber dados do peer" + this.peer.getIp());
 			e.printStackTrace();
+			return;
 		}
 		this.closeConnection();
 		this.getTransfer().removeReceiver(this);
@@ -143,9 +154,10 @@ public class Receiver implements Runnable {
 	public void connect() {
 		try {
 			this.socket = new Socket(this.peer.getIp(), this.port);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
+			this.transfer.setAbort(true);
+			System.out.println("Problema ao receber dados do peer" + this.peer.getIp());
+			this.abort = true;
 			e.printStackTrace();
 		}
 		

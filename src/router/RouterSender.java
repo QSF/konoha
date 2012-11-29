@@ -4,10 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.ConnectException;
-import java.net.NoRouteToHostException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -39,15 +36,9 @@ public class RouterSender implements Runnable{
 	public void connect() {
 		try {
 			this.connection = new Socket(this.peer.getIp(), this.port);
-		} catch (ConnectException | NoRouteToHostException e){
+		} catch (IOException e){
 			System.out.println("O peer " +  this.peer.getIp() + " está fora.");
 			Registry.getInstance().getRouter().removePeer(this.peer);
-			this.runCondition = false;
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			this.runCondition = false;
-		} catch (IOException e) {
-			e.printStackTrace();
 			this.runCondition = false;
 		}
 		

@@ -30,6 +30,8 @@ public class Transfer implements Runnable {
 	private int senderNumber;
 	
 	private TransferConfig transferConfig;
+	/**Indica se uma transferencia deve ou não ser abortada*/
+	private boolean abort = false;
 
 	public Transfer(String fileName, TransferConfig transferConfig){
 		this.setTransferConfig(transferConfig);
@@ -78,7 +80,6 @@ public class Transfer implements Runnable {
 			return;
 		}
 			
-		
 		this.calculatePing();
 		this.decision();
 		this.updateGui();
@@ -116,6 +117,13 @@ public class Transfer implements Runnable {
 		Registry.getInstance().getWindow().setMessages("Transferência em andamento.");
 		initial = System.currentTimeMillis()/1000;
 		while (System.currentTimeMillis()/1000 - initial < 10){}
+		
+		if (this.isAbort()){//deu erro na hora de transferir.
+			String msg = "O arquivo " + this.file.getName() + " não conseguiu ser transferiu.";
+			System.out.println(msg);
+			Registry.getInstance().getWindow().setMessages(msg);
+			return;
+		}
 		//depois que transferiu todas as partes, salva.
 		try {
 			this.saveFile();
@@ -273,6 +281,14 @@ public class Transfer implements Runnable {
 
 	public void setTransferConfig(TransferConfig transferConfig) {
 		this.transferConfig = transferConfig;
+	}
+
+	public boolean isAbort() {
+		return abort;
+	}
+
+	public synchronized void setAbort(boolean abort) {
+		this.abort = abort;
 	}
 
 }
