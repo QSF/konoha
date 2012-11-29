@@ -39,6 +39,9 @@ public class RouterReceiver implements Runnable {
 			output.flush();
 			this.stream = new IOData(new DataInputStream (this.connection.getInputStream()), output);
 		} catch (IOException e) {
+			System.out.println("O peer " +  this.peer.getIp() + " está fora.");
+			Registry.getInstance().getRouter().removePeer(this.peer);
+			this.runCondition = false;
 			e.printStackTrace();
 		}
 	}
@@ -67,9 +70,10 @@ public class RouterReceiver implements Runnable {
 		try {
 			this.stream.close();
 			this.connection.close();
-//			 Registry.getInstance().getServerListerner()
-//			 	.removeReceiverConnection(this);
 		} catch (IOException e) {
+			System.out.println("O peer " +  this.peer.getIp() + " está fora.");
+			Registry.getInstance().getRouter().removePeer(this.peer);
+			this.runCondition = false;
 			e.printStackTrace();
 		}
 	}
@@ -182,12 +186,14 @@ public class RouterReceiver implements Runnable {
 	 * É preciso checar o nome do arquivo.
 	 * */
 	public void ANSWERAction(DataAnswer data){
+		//fecha o thread.
+		this.runCondition = false;
+		
+		if (Registry.getInstance().getP2pApplication().getTransfer().hasPeer(this.peer))
+			return;//se o peer já está contido, isso não se torna necessário.
 		System.out.println("O peer " + this.peer.getIp());
 		System.out.println("Possui o arquivo " + data.getFileName());
 		System.out.println("Com o tamanho " + data.getSize());
-		
-		//fecha o thread.
-		this.runCondition = false;
 		
 		DataFile file = Registry.getInstance().getP2pApplication().getTransfer()
 			.getFile();

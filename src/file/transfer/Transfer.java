@@ -66,6 +66,7 @@ public class Transfer implements Runnable {
 	
 	@Override
 	public void run() {
+		Registry.getInstance().getWindow().getPeersPanel().getPeersListPanel().clear();
 		Registry.getInstance().getWindow().setMessages("Aguarde");
 		//esperar um tempo
 		long initial = System.currentTimeMillis()/1000;
@@ -249,6 +250,14 @@ public class Transfer implements Runnable {
 	
 	public synchronized void removeSender(){
 		this.senderNumber--;
+	}
+	
+	public synchronized boolean hasPeer(Peer peer){
+		for (Peer p : this.peers){
+			if (p.getIp().equals(peer.getIp()))//tem o peer
+				return true;
+		}
+		return false;
 	}
 	
 	/**Getters e setters*/	

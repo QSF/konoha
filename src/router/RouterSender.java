@@ -53,8 +53,9 @@ public class RouterSender implements Runnable{
 			this.stream = new IOData(new DataInputStream(this.connection.getInputStream()), output);
 			
 		} catch (IOException e) {
+			System.out.println("O peer " +  this.peer.getIp() + " está fora.");
+			Registry.getInstance().getRouter().removePeer(this.peer);
 			this.runCondition = false;
-			e.printStackTrace();
 		}
 	}
 	
@@ -166,7 +167,9 @@ public class RouterSender implements Runnable{
 			this.stream.close();
 			this.connection.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("O peer " +  this.peer.getIp() + " está fora.");
+			Registry.getInstance().getRouter().removePeer(this.peer);
+			this.runCondition = false;
 		}
 	}
 }
