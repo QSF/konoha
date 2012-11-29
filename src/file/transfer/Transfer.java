@@ -119,7 +119,7 @@ public class Transfer implements Runnable {
 		while (System.currentTimeMillis()/1000 - initial < 10){}
 		
 		if (this.isAbort()){//deu erro na hora de transferir.
-			String msg = "O arquivo " + this.file.getName() + " não conseguiu ser transferiu.";
+			String msg = "O arquivo " + this.file.getName() + " não conseguiu ser transferido.";
 			System.out.println(msg);
 			Registry.getInstance().getWindow().setMessages(msg);
 			return;

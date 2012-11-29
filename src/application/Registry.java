@@ -2,6 +2,7 @@ package application;
 
 import gui.KonohaWindow;
 import gui.NeighborsWindow;
+import gui.UploadWindow;
 import router.Router;
 
 public class Registry {
@@ -12,6 +13,7 @@ public class Registry {
 	private P2PApplication p2pApplication;
 	private KonohaWindow window;
 	private NeighborsWindow neighborsWindow;
+	private UploadWindow uploadWindow;
 	
 	private Registry(){};
 	
@@ -49,6 +51,14 @@ public class Registry {
 
 	public void setNeighborsWindow(NeighborsWindow neighborsWindow) {
 		this.neighborsWindow = neighborsWindow;
+	}
+
+	public UploadWindow getUploadWindow() {
+		return uploadWindow;
+	}
+
+	public void setUploadWindow(UploadWindow uploadWindow) {
+		this.uploadWindow = uploadWindow;
 	}
 	
 }

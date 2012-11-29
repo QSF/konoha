@@ -27,7 +27,7 @@ public class KonohaWindow extends JFrame {
 	}
 	
 	protected void init(){
-		
+		this.setTitle("###Konoha###");
 		this.setLayout(new BoxLayout(this.getContentPane(), 
 							BoxLayout.PAGE_AXIS));
 		this.setSize(new Dimension(KonohaWindow.WIDTH, 

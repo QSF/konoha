@@ -2,6 +2,7 @@ package application;
 
 import gui.KonohaWindow;
 import gui.NeighborsWindow;
+import gui.UploadWindow;
 import router.Router;
 
 public class ApplicationStart {
@@ -19,6 +20,9 @@ public class ApplicationStart {
 		
 		NeighborsWindow neighborsWindow = new NeighborsWindow();
 		Registry.getInstance().setNeighborsWindow(neighborsWindow);
+		
+		UploadWindow uploadWindow = new UploadWindow();
+		Registry.getInstance().setUploadWindow(uploadWindow);
 	}
 
 }

@@ -9,6 +9,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import application.Registry;
+
 import router.Peer;
 
 public class TransferSender implements Runnable {
@@ -71,6 +73,9 @@ public class TransferSender implements Runnable {
 	public void run(){
 		ArrayList<DataType> dataList = this.receive();
 		DataMusicTransfer data = (DataMusicTransfer) dataList.get(0);
+		//coloca na GUI
+		Registry.getInstance().getUploadWindow().getPeersListPanel()
+				.addPeer(this.peer,data.getFileName(),data.getOffset(),data.getLength());
 		
 		File file = new File("arquivos/" + data.getFileName());
 		FileInputStream fis;
@@ -92,5 +97,7 @@ public class TransferSender implements Runnable {
 				" do aquivo " + data.getFileName());
 		this.closeConnection();
 		this.sender.remove(this);
+		//remove da GUI.
+		Registry.getInstance().getUploadWindow().getPeersListPanel().removePeer(this.peer);
 	}
 }

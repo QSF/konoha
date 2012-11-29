@@ -33,7 +33,7 @@ public class PeersListPanel extends JPanel {
 	}
 	
 	public PeersListPanel(){
-		this.init("IP                        total(%)      baixado(Mbytes)");
+		this.init("IP                        total(%)");
 	}
 	
 	protected void init(String header){		
@@ -54,7 +54,7 @@ public class PeersListPanel extends JPanel {
 	}
 	
 	protected void initHeader(String header){
-		this.header = header;
+		this.setHeader(header);
 		this.peers.add(header);
 		this.list.setListData(this.peers);
 	}
@@ -65,6 +65,17 @@ public class PeersListPanel extends JPanel {
 	public void addPeer(Peer peer){
 		this.jPeers.add(peer);
 		this.peers.add(peer.toString());
+		
+		this.list.setListData(this.peers);
+	}
+	
+	/**
+	 * Adiciona um peer na lista de peers, com arquivo, offset e length.
+	 * */
+	public void addPeer(Peer peer, String fileName, long off, long length){
+		this.jPeers.add(peer);
+		this.peers.add(peer.getIp().getHostAddress() + " " + fileName + " " + 
+					off + " " + length );
 		
 		this.list.setListData(this.peers);
 	}
@@ -101,5 +112,13 @@ public class PeersListPanel extends JPanel {
 		for (Peer p : aux){
 			this.removePeer(p);
 		}
+	}
+
+	public String getHeader() {
+		return header;
+	}
+
+	public void setHeader(String header) {
+		this.header = header;
 	}
 }
