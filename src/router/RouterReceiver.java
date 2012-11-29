@@ -152,6 +152,10 @@ public class RouterReceiver implements Runnable {
 		
 		
 		if (Registry.getInstance().getP2pApplication().hasFile(data.getFileName())){
+			//adiciona o cara na lista de peers(se ele não estiver).
+			//apenas pq eles irão trocar arquivos.
+			Registry.getInstance().getRouter().addPeer(this.peer);
+			
 			System.out.println("Tenho o arquivo: " + data.getFileName());
 			DataAnswer dataType = new DataAnswer();
 			dataType.getOperations().add(OperationCode.ANSWER);

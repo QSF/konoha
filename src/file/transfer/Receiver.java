@@ -133,11 +133,11 @@ public class Receiver implements Runnable {
 			e.printStackTrace();
 		}
 		System.out.println(this.transfer.getFile().getName() + ":Leu de " + this.getOffset() + 
-				" a " + this.getLength() + " do peer " + this.peer.getIp());
+				" a " + (this.getOffset() + this.getLength()) + " do peer " + this.peer.getIp());
 		//concatena
 		System.arraycopy(bytes, 0, this.transfer.getFile().getContent(), 
 				this.offset, this.length);
-		System.out.println("Concatenou o pedaço do peer" + this.peer.getIp());
+		System.out.println("Concatenou o pedaço do peer " + this.peer.getIp());
 		
 		try {
 			is.close();
