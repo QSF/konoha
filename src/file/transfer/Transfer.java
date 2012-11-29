@@ -87,10 +87,10 @@ public class Transfer implements Runnable {
 			offset = offset + length;
 		}
 		
-		while (!this.receivers.isEmpty()){};
-//		initial = System.currentTimeMillis()/1000;
-//		while (System.currentTimeMillis()/1000 - initial < 10){}
-//		//depois que transferiu todas as partes, salva.
+//		while (!this.receivers.isEmpty()){};
+		initial = System.currentTimeMillis()/1000;
+		while (System.currentTimeMillis()/1000 - initial < 10){}
+		//depois que transferiu todas as partes, salva.
 		try {
 			this.saveFile();
 		} catch (IOException e) {

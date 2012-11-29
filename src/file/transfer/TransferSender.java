@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -15,7 +16,6 @@ public class TransferSender implements Runnable {
 	private Peer peer;
 	private IOData stream;
 	private Socket connection;
-	private boolean runCondition;
 	private Sender sender;
 	
 	public TransferSender(Socket connection, Sender sender){
@@ -74,16 +74,19 @@ public class TransferSender implements Runnable {
 		
 		File file = new File("arquivos/" + data.getFileName());
 		FileInputStream fis;
+		OutputStream os = null;
+            
 		try {
-			fis = new FileInputStream(file);
-			byte[] bytes = new byte[data.getLength()];
-			fis.read(bytes, data.getOffset(), data.getLength());
-			data.setContent(bytes);
+			os = this.connection.getOutputStream();
+			byte[] mybytearray = new byte[data.getLength()];
+	        fis = new FileInputStream(file);
+	        fis.read(mybytearray, data.getOffset(), data.getLength());
+            os.write(mybytearray, 0, data.getLength());
+            os.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		this.send(data);
+	
 		this.closeConnection();
 		this.sender.remove(this);
 	}

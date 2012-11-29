@@ -59,7 +59,7 @@ public class IOData {
 				//
 				for (i=0 ; i < size ; i++){
 					byte[] bytes = new byte[length[i]];
-					this.input.read(bytes,0,length[i]);
+					int readBytes = this.input.read(bytes,0,length[i]);
 					dataTypeList.add(this.byteToDataType(bytes));
 				}
 				
@@ -370,7 +370,6 @@ public class IOData {
 			try {
 				fileName = new String(bytes,6,bytes.length-6,"UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			data.setFileName(fileName);
@@ -411,7 +410,6 @@ public class IOData {
 			try {
 				fileName = new String(bytes,9,bytes.length-9,"UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			data.setFileName(fileName);

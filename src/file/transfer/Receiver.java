@@ -1,13 +1,15 @@
 package file.transfer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
+
+import javax.crypto.spec.PSource;
 
 import router.Peer;
 
@@ -104,15 +106,36 @@ public class Receiver implements Runnable {
 	public void run() {
 		this.connect();
 		this.createStreams();
+		//envia os dados sobre o pedaço solicitado.
 		DataMusicTransfer askData = new DataMusicTransfer(
 				this.transfer.getFile().getName(), this.offset,this.length);
 		this.send(askData);
-		ArrayList<DataType> dataList = this.receive();
 		
-		DataMusicTransfer data = (DataMusicTransfer) dataList.get(0);
-		
-		System.arraycopy(data.getContent(), 0, this.transfer.getFile().getContent(), 
-						 this.offset, this.length);
+		//esperar que envie a música.
+		byte[] bytes = new byte[askData.getLength()];
+      
+		InputStream is = null;
+		try {
+			is = this.socket.getInputStream();
+			int count;
+	        int position = 0;
+	        byte[] bytes2 = new byte[1024];
+	        while ((count = is.read(bytes2)) >= 0) {
+	        	System.arraycopy(bytes2, 0, bytes, position, count);
+	            position += count;
+	        }//le todos os bytes
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+            
+		//concatena
+		System.arraycopy(bytes, 0, this.transfer.getFile().getContent(), 
+				this.offset, this.length);
+		try {
+			is.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.closeConnection();
 		this.getTransfer().removeReceiver(this);
 	}
