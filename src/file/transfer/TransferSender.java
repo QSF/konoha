@@ -80,13 +80,14 @@ public class TransferSender implements Runnable {
 			os = this.connection.getOutputStream();
 			byte[] mybytearray = new byte[data.getLength()];
 	        fis = new FileInputStream(file);
-	        fis.read(mybytearray, data.getOffset(), data.getLength());
+	        fis.skip(data.getOffset());
+	        fis.read(mybytearray, 0, data.getLength());
             os.write(mybytearray, 0, data.getLength());
             os.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	
+		System.out.println("Enviou "+ data.getLength() + " bytes para o peer: " + this.peer.getIp());
 		this.closeConnection();
 		this.sender.remove(this);
 	}

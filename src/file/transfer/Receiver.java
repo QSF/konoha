@@ -100,7 +100,7 @@ public class Receiver implements Runnable {
 	}	
 	
 	/**
-	 * M�todo que concatena as partes recebidas do arquivo 
+	 * Método que concatena as partes recebidas do arquivo 
 	 **/
 	@Override
 	public void run() {
@@ -127,10 +127,12 @@ public class Receiver implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-            
+		System.out.println("Leu os bytes do peer " + this.peer.getIp());
 		//concatena
 		System.arraycopy(bytes, 0, this.transfer.getFile().getContent(), 
 				this.offset, this.length);
+		System.out.println("Concatenou o pedaço do peer" + this.peer.getIp());
+		
 		try {
 			is.close();
 		} catch (IOException e) {

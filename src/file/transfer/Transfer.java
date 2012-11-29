@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,9 +54,10 @@ public class Transfer implements Runnable {
 		}
 		boolean finishedPing = false;
 		while (!finishedPing){
+			finishedPing = true;
 			for (Peer peer: this.peers){
-				if (peer.getPing() != -1.0)
-					finishedPing = true;
+				if (peer.getPing() == -1.0)
+					finishedPing = false;
 			}
 		}
 	}
@@ -72,29 +72,44 @@ public class Transfer implements Runnable {
 		this.calculatePing();
 		this.decision();
 
+		
+		int[] length = new int[this.peers.size()];
+		int sum = 0;
+		int i = 0;
+		for (Peer p : this.peers){//calcula o length
+			length[i] = (int) ((p.getPercent() * this.file.getSize()) / 100);
+			sum += length[i];
+			i++;
+		}
+		//arredonda.(caso a porcentagem seja quebrada.
+		length[0] += (int) this.file.getSize() - sum; 
+		
 		this.file.setContent(new byte[(int) this.file.getSize()]);
 		int port = this.transferConfig.getPort();
 		int offset = 0;
-		int length = 0;
-		for (Peer peer: peers){
-			length = (int) ((peer.getPercent() * this.file.getSize()) / 100);
-			
+		i = 0;
+		for (Peer peer: peers){			
 			System.out.println("O peer " + peer.getIp() + " tem o %: " + peer.getPercent());
-			System.out.println("Que são " + length + " bytes de " + this.file.getSize());
-			Receiver receiver = new Receiver(this, port, peer, offset, length);
+			System.out.println("Que são " + length[i] + " bytes de " + this.file.getSize());
+			System.out.println("offset e length: " +offset + " " + length[i] + " de " + peer.getIp());
+			Receiver receiver = new Receiver(this, port, peer, offset, length[i]);
 			this.receivers.add(receiver);
 			Thread thread = new Thread(receiver);
 			thread.start();
 			
-			offset = offset + length;
+			offset = offset + length[i];
+			i++;
 		}
 		
 //		while (!this.receivers.isEmpty()){};
+		
 		initial = System.currentTimeMillis()/1000;
 		while (System.currentTimeMillis()/1000 - initial < 10){}
+		System.out.println("Vai tentar escrever no arquivo.");
 		//depois que transferiu todas as partes, salva.
 		try {
 			this.saveFile();
+			System.out.println("Escrito.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -131,7 +146,8 @@ public class Transfer implements Runnable {
 		//Calculando a porcentagem que cada ping de cada peer representa
 		//Falta arrumar quando a porcentagem sai "quebrada"
 		for (Peer p : this.peers) {
-			p.setPercent((int) ((p.getPing() * 100) / sum));
+			int percentage = (int) ((p.getPing() * 100) / sum);
+			p.setPercent(percentage);
 		}
 		
 		//Bubble sort
