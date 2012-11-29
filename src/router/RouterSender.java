@@ -154,6 +154,13 @@ public class RouterSender implements Runnable{
 		this.runCondition = false;
 	}
 	
+	public void ENDAction(DataType data){		
+		//apenas envia o end
+		this.send(data);		
+		//fecha o thread.
+		this.runCondition = false;
+	}
+	
 	public void closeConnection() {
 		try {
 			this.stream.close();

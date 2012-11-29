@@ -69,8 +69,8 @@ public class Transfer implements Runnable {
 		Registry.getInstance().getWindow().setMessages("Aguarde");
 		//esperar um tempo
 		long initial = System.currentTimeMillis()/1000;
-		//espera 5 sec, tempo máximo para esperar um peer.
-		while (System.currentTimeMillis()/1000 - initial < 5){}
+		//espera 7 sec, tempo máximo para esperar um peer.
+		while (System.currentTimeMillis()/1000 - initial < 7){}
 		
 		if (this.peers.isEmpty()){
 			//se estiver vazio, ngm tem o arquivos
@@ -100,6 +100,7 @@ public class Transfer implements Runnable {
 		int port = this.transferConfig.getPort();
 		int offset = 0;
 		i = 0;
+		ArrayList<Thread> threads = new ArrayList<>();
 		for (Peer peer: peers){
 			if (peer.getPing() != -1){//conferir se o peer não chegou depois.
 				System.out.println("O peer " + peer.getIp() + " tem o %: " + peer.getPercent());
@@ -110,13 +111,21 @@ public class Transfer implements Runnable {
 				Thread thread = new Thread(receiver);
 				thread.start();
 				
+				threads.add(thread);
+				
 				offset = offset + length[i];
 				i++;
 			}
 		}
 		Registry.getInstance().getWindow().setMessages("Transferência em andamento.");
-		initial = System.currentTimeMillis()/1000;
-		while (System.currentTimeMillis()/1000 - initial < 10){}
+		
+		for (Thread thread : threads){
+			try {
+				thread.join();
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
 		
 		if (this.isAbort()){//deu erro na hora de transferir.
 			String msg = "O arquivo " + this.file.getName() + " não conseguiu ser transferido.";

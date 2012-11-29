@@ -20,13 +20,12 @@ public class TimerRouter implements Runnable {
 			}
 			//Pede a lista de vizinhos para cada vizinho.
 			Registry.getInstance().getRouter().askNeighbors();
-//			ArrayList<Peer> peers = (ArrayList<Peer>) Registry.getInstance().getRouter().getPeers().clone();
-//			for (Peer peer : peers){
-//				DataType data = new DataType();
-//				data.getOperations().add(OperationCode.END);
-//				Registry.getInstance().getRouter().search(peer, data);
-//			}
+			ArrayList<Peer> peers = (ArrayList<Peer>) Registry.getInstance().getRouter().getPeers().clone();
+			for (Peer peer : peers){
+				DataType data = new DataType();
+				data.getOperations().add(OperationCode.END);
+				Registry.getInstance().getRouter().search(peer, data);
+			}
 		}
 	}
-
 }
